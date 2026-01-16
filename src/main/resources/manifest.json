@@ -1,0 +1,6 @@
+{
+  "Group" : "com.example",
+  "Name" : "Bedwars",
+  "Version" : "1.0.0",
+  "Main" : "com.example.plugin.Bedwars"
+}
