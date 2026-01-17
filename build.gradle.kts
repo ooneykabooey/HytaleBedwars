@@ -20,3 +20,8 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+/// Do unchecked.
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:unchecked")
+}

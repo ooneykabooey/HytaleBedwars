@@ -6,17 +6,25 @@ import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 // TODO: Test this out.
-public class PlayerJoinLeaveHandler extends RefSystem {
-    @Override
-    public void onEntityAdded(@Nonnull Ref ref, @Nonnull AddReason addReason, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
-        Player player = (Player) commandBuffer.getComponent(ref, Player.getComponentType());
+public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
-        if (player.isFirstSpawn()) {
+    @Nullable
+    @Override
+    public Query<EntityStore> getQuery() {
+        return Player.getComponentType();
+    }
+
+    @Override
+    public void onEntityAdded(@Nonnull Ref<EntityStore> ref, @Nonnull AddReason addReason, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        Player player = (Player) store.getComponent(ref, Player.getComponentType());
+
+        if (player != null && player.isFirstSpawn()) {
             player.sendMessage(Message.raw("Welcome to Hytale Bedwars!"));
         } else {
             player.sendMessage(Message.raw("Welcome back!"));
@@ -35,7 +43,7 @@ public class PlayerJoinLeaveHandler extends RefSystem {
     }
 
     @Override
-    public void onEntityRemove(@Nonnull Ref ref, @Nonnull RemoveReason removeReason, @Nonnull Store store, @Nonnull CommandBuffer commandBuffer) {
+    public void onEntityRemove(@Nonnull Ref<EntityStore> ref, @Nonnull RemoveReason removeReason, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         Player player = (Player) store.getComponent(ref, Player.getComponentType());
         PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
 
@@ -48,11 +56,5 @@ public class PlayerJoinLeaveHandler extends RefSystem {
 
         // Execute when leaving during game
         // Having stayed through the entire queue, the player is eligible to rejoin, and will be deemed dead/eliminated depending on the bed's state.
-    }
-
-    @Nullable
-    @Override
-    public Query getQuery() {
-        return Player.getComponentType();
     }
 }
