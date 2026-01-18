@@ -42,7 +42,7 @@ public class BedwarsItemTimer {
 
             current--;
             if (current < 0) {
-                Vector3d dropPos = new Vector3d(0.5, 200.0, 0.5);
+                Vector3d dropPos = new Vector3d(0.5, 200.0, 0.5); // TODO: Change to player's team's resource pos.
                 Item item = (Item) Item.getAssetMap().getAsset(dropEntry.getItem());
                 if (item != null) {
                     ItemStack itemStack = new ItemStack(item.getId(), dropEntry.getAmount());

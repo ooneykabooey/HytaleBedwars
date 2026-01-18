@@ -1,7 +1,6 @@
 package com.example.plugin.managers;
 
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -11,18 +10,20 @@ import java.util.Set;
 /**
  * Represents a BedWars team and tracks its state.
  */
-public class BedwarsTeamManager {
+public class BedwarsTeam {
 
     private final String id; // "red", "blue", etc
     private final Vector3d spawnLocation;
     private boolean bedAlive = true;
+    private final Vector3d forgeLocation;
 
     // ECS-entity references instead of UUIDs
     private final Set<Ref<EntityStore>> players = new HashSet<>();
 
-    public BedwarsTeamManager(String id, Vector3d spawnLocation) {
+    public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation) {
         this.id = id;
         this.spawnLocation = spawnLocation;
+        this.forgeLocation = forgeLocation;
     }
 
     public String getId() {
@@ -70,4 +71,6 @@ public class BedwarsTeamManager {
     public boolean containsPlayer(Ref<EntityStore> ref) {
         return players.contains(ref);
     }
+
+
 }

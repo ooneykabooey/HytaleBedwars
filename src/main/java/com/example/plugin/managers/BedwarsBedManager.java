@@ -10,7 +10,7 @@ import java.util.Map;
 public class BedwarsBedManager {
 
     // Map bed block positions to the team that owns the bed
-    private final Map<Vector3d, BedwarsTeamManager> bedLocations = new HashMap<>();
+    private final Map<Vector3d, BedwarsTeam> bedLocations = new HashMap<>();
 
     /**
      * Register a bed for a team.
@@ -18,7 +18,7 @@ public class BedwarsBedManager {
      * @param pos  the block position of the bed
      * @param team the team that owns this bed
      */
-    public void registerBed(Vector3d pos, BedwarsTeamManager team) {
+    public void registerBed(Vector3d pos, BedwarsTeam team) {
         bedLocations.put(pos, team);
     }
 
@@ -29,7 +29,7 @@ public class BedwarsBedManager {
      * @param pos the position of the broken bed
      */
     public void handleBedBreak(Vector3d pos) {
-        BedwarsTeamManager team = bedLocations.get(pos);
+        BedwarsTeam team = bedLocations.get(pos);
         if (team == null) return; // Not a tracked bed
 
         // Destroy the bed
@@ -52,7 +52,7 @@ public class BedwarsBedManager {
     /**
      * Get the team that owns the bed at the given position.
      */
-    public BedwarsTeamManager getTeam(Vector3d pos) {
+    public BedwarsTeam getTeam(Vector3d pos) {
         return bedLocations.get(pos);
     }
 

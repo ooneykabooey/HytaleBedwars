@@ -38,6 +38,7 @@ public class BlockPlaceSystem extends EntityEventSystem<EntityStore, PlaceBlockE
 
         Vector3i pos = placeBlockEvent.getTargetBlock();
 
+        // TODO: Any registered beds' coordinates needs to be automatically put into the blocksPlaced list, so that the user can break them.
         BlockBreakSystem.blocksPlaced.add(pos);
         player.sendMessage(Message.raw("Placed block!"));
     }
@@ -45,6 +46,6 @@ public class BlockPlaceSystem extends EntityEventSystem<EntityStore, PlaceBlockE
     @Nullable
     @Override
     public Query<EntityStore> getQuery() {
-        return PlayerRef.getComponentType();
+        return Player.getComponentType();
     }
 }

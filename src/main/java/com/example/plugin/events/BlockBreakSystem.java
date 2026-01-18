@@ -40,6 +40,7 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlock
     @Override
     public void handle(int i, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer, @Nonnull DamageBlockEvent damageBlockEvent) {
 
+        // TODO: Check if the block that is broken is a bed.
         if (damageBlockEvent.getBlockType() != BlockType.EMPTY) {
 
             Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);

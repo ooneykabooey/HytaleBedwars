@@ -1,10 +1,13 @@
 package com.example.plugin;
 
+import com.example.plugin.commands.DeployCommand;
+import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.utils.BedwarsItemTimerManager;
+import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.RefSystem;
@@ -18,10 +21,13 @@ import javax.annotation.Nonnull;
 ///  MAIN PLUGIN BRANCH.
 public class Bedwars extends JavaPlugin {
 
+    // TODO: Review all project warnings and see of any resolutions to them.
+
     private boolean debug = false;
-    private boolean started = true;
+    private boolean started = false;
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(this);
+    private BedwarsInGameQueueController queueController = new BedwarsInGameQueueController(this);
 
     // Metadata
     private final String pluginName = "Hytale Bedwars";
@@ -39,12 +45,12 @@ public class Bedwars extends JavaPlugin {
         super.setup();
         ComponentRegistryProxy<EntityStore> estorereg = this.getEntityStoreRegistry();
 
-        // Register System
+        // Register EntityStore Systems
         estorereg.registerSystem(new BlockBreakSystem(this));
         estorereg.registerSystem(new BlockPlaceSystem());
+        estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
 
-        // TODO: See about fragility.
-        estorereg.registerSystem(new PlayerJoinLeaveSystem());
+        this.getCommandRegistry().registerCommand(new DeployCommand(this));
 
 
 //        resourceTimer.start();
@@ -53,7 +59,7 @@ public class Bedwars extends JavaPlugin {
 
     // Helper method to register all commands inside the plugin, for readability's sake.
     private void registerCommands() {
-        // COMMANDS
+
     }
 
     public boolean debugMode() {
@@ -68,5 +74,10 @@ public class Bedwars extends JavaPlugin {
         return resourceTimer;
     }
 
+    ///  DEPLOY ///
+
+    public static void deploy(GAMEMODE gamemode) {
+
+    }
 
 }

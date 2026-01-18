@@ -9,8 +9,9 @@ public class BedwarsPlayer {
     private final Ref<EntityStore> ref;
     private final Player player;
 
-    private BedwarsTeamManager team;
+    private BedwarsTeam team;
     private boolean spectator = false;
+    private boolean rejoinEligible = false;
 
     public BedwarsPlayer(Ref<EntityStore> ref, Player player) {
         this.ref = ref;
@@ -29,7 +30,7 @@ public class BedwarsPlayer {
      * Assign the player to a team.
      * Handles removing from the previous team automatically.
      */
-    public void setTeam(BedwarsTeamManager newTeam) {
+    public void setTeam(BedwarsTeam newTeam) {
         // Remove from old team
         if (this.team != null) {
             this.team.removePlayer(ref);
@@ -43,7 +44,7 @@ public class BedwarsPlayer {
         }
     }
 
-    public BedwarsTeamManager getTeam() {
+    public BedwarsTeam getTeam() {
         return team;
     }
 
@@ -62,4 +63,16 @@ public class BedwarsPlayer {
     public void setSpectator(boolean spectator) {
         this.spectator = spectator;
     }
+
+
+    // Accessor/Mutator Methods for player rejoin eligibility
+    public boolean canRejoin() {
+        return rejoinEligible;
+    }
+
+    public void setRejoinEligibility(boolean value) {
+        rejoinEligible = value;
+    }
+
 }
+

@@ -23,8 +23,11 @@ import java.util.concurrent.TimeUnit;
 
 public class BedwarsItemTimerManager {
 
+    // TODO: Get references to all of the players, and the coordinate vectors to all team resource positions (3.5 blocks from their spawnpoint).
+
     private Bedwars plugin;
     private boolean started = false;
+
 
     public BedwarsItemTimerManager(Bedwars plugin) {
         this.plugin = plugin;
