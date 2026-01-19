@@ -1,0 +1,26 @@
+// Testing ui to learn with
+
+// Import Common ui for the TextField
+$C ="../Common.ui";
+Group {
+    Anchor: (Width: 400, Height: 250);
+    Background: #554cf3(0.9);
+    LayoutMode: Top;
+    Padding: (Full: 20);
+
+    Label #Title {
+      Text: "testing ui";
+      Anchor: (Height: 40);
+      Style: (FontSize: 30, TextColor: #ffffff, Alignment: Center);
+    }
+
+    $C.@TextField #NameInput {
+      Anchor: (Height: 35);
+      PlaceholderText: "Enter your name...";
+    }
+
+    TextButton #GreetButton {
+      Anchor: (Height: 40);
+      Text: "Greet me!";
+    }
+}

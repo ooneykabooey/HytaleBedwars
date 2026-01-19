@@ -21,6 +21,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from("src/main/resources")
+}
+
 /// Do unchecked.
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:unchecked")

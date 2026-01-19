@@ -24,10 +24,11 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
     public PlayerJoinLeaveSystem(Bedwars plugin) {
         this.plugin = plugin;
+        this.queueController = new BedwarsInGameQueueController(plugin);
     }
 
     /**
-     * Register this query as apart of a Player.
+     * Register this query as part of a Player.
      */
     @Nullable
     @Override

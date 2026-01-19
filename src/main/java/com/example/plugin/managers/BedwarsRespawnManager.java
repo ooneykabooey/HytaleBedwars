@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.RespawnSystems;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
@@ -14,18 +15,18 @@ public class BedwarsRespawnManager extends RespawnSystems.OnRespawnSystem {
 
     @Nonnull
     @Override
-    public Query getQuery() {
+    public Query<EntityStore> getQuery() {
         return Player.getComponentType();
     }
 
     @Override
-    public void onComponentRemoved(@Nonnull Ref ref,
+    public void onComponentRemoved(@Nonnull Ref<EntityStore> ref,
                                    @Nonnull DeathComponent component,
-                                   @Nonnull Store store,
-                                   @Nonnull CommandBuffer commandBuffer) {
+                                   @Nonnull Store<EntityStore> store,
+                                   @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         // Player just respawned
 
-        Player player = (Player) store.getComponent(ref, Player.getComponentType());
+        Player player = store.getComponent(ref, Player.getComponentType());
 
         // Give starter items (add to hotbar first, then storage)[^2]
         player.getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Tool_Sword_Wood", 1));
