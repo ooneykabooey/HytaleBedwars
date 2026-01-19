@@ -15,7 +15,6 @@ Group {
     }
 
     $C.@TextField #NameInput {
-      Anchor: (Height: 35);
       PlaceholderText: "Enter your name...";
     }
 
