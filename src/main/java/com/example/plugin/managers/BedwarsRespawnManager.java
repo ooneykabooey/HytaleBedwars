@@ -1,5 +1,6 @@
 package com.example.plugin.managers;
 
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.Message;
@@ -33,6 +34,6 @@ public class BedwarsRespawnManager extends RespawnSystems.OnRespawnSystem {
         player.getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Consumable_Apple", 5));
 
         // Send welcome back message
-        player.sendMessage(Message.raw("You have respawned!"));
+        BedwarsMessenger.respawnMessage(player);
     }
 }

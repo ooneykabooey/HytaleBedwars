@@ -1,5 +1,6 @@
 package com.example.plugin;
 
+import com.example.plugin.commands.DebugCommand;
 import com.example.plugin.commands.DeployCommand;
 import com.example.plugin.commands.TestUICommand;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
@@ -7,6 +8,7 @@ import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
@@ -25,6 +27,8 @@ public class Bedwars extends JavaPlugin {
     // TODO: Review all project warnings and see of any resolutions to them.
 
     private boolean debug = false;
+    private BedwarsMessenger messenger = new BedwarsMessenger(this);
+
     private boolean started = false;
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(this);
@@ -53,6 +57,7 @@ public class Bedwars extends JavaPlugin {
 
         this.getCommandRegistry().registerCommand(new DeployCommand(this));
         this.getCommandRegistry().registerCommand(new TestUICommand());
+        this.getCommandRegistry().registerCommand(new DebugCommand(this));
 
 
 //        resourceTimer.start();
@@ -67,6 +72,7 @@ public class Bedwars extends JavaPlugin {
     public boolean debugMode() {
         return debug;
     }
+    public void setDebug(boolean value) {this.debug = debug;}
 
     public boolean gameCommenced() {
         return started;
@@ -81,5 +87,6 @@ public class Bedwars extends JavaPlugin {
     public static void deploy(GAMEMODE gamemode) {
 
     }
+
 
 }

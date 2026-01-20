@@ -1,6 +1,7 @@
 package com.example.plugin.events;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+// When player DAMAGES block...
 public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlockEvent> {
 
     Bedwars plugin;
@@ -47,12 +49,14 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlock
 
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
-            player.sendMessage(Message.raw("Damaged block!"));
+            BedwarsMessenger.playerDamagedBlockMessage(player);
 
-            if (!timerManager.started()) {
-                timerManager.start(store, player);
+            // Start ticking if debug mode is on.
+            if (plugin.debugMode()) {
+                if (!timerManager.started()) {
+                    timerManager.start(store, player);
+                }
             }
-
 
             World world = player.getWorld();
             if (world == null) return;
@@ -67,7 +71,7 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlock
 
             if (!(player.getGameMode() == GameMode.Creative) && !(blocksPlaced.contains(targetBlock))) {
                 damageBlockEvent.setCancelled(true);
-                player.sendMessage(Message.raw("You cannot break blocks that are apart of the map!"));
+                BedwarsMessenger.notAllowedToBreakMapMessage(player);
             }
 
         }

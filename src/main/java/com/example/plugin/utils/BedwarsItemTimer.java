@@ -1,5 +1,7 @@
 package com.example.plugin.utils;
 
+import com.example.plugin.Bedwars;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
@@ -48,6 +50,7 @@ public class BedwarsItemTimer {
                     ItemStack itemStack = new ItemStack(item.getId(), dropEntry.getAmount());
                     Holder<EntityStore>[] itemEntityHolders = ItemComponent.generateItemDrops(store, List.of(itemStack), dropPos, Vector3f.ZERO);
                     player.getWorld().execute(() -> player.getWorld().getEntityStore().getStore().addEntities(itemEntityHolders,AddReason.SPAWN));
+                    BedwarsMessenger.forgeSpawnMessage(ID, player);
                 }
                 current = start;
             }

@@ -50,12 +50,6 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
         if (!plugin.gameCommenced()) {
 
-            if (player != null && player.isFirstSpawn()) {
-                player.sendMessage(Message.raw("Welcome to Hytale Bedwars!"));
-            } else {
-                player.sendMessage(Message.raw("Welcome back!"));
-            }
-
             PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
             queueController.addPlayer(ref, player);
         } else {
@@ -97,8 +91,6 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
         if (!plugin.gameCommenced()) {
             BedwarsPlayerManager.remove(ref);
         }
-
-        //player.sendMessage(Message.raw("" + playerRef));
 
         // Execute during game queue
         // Player will leave the lobby and won't be able to rejoin the same world once its game has started.

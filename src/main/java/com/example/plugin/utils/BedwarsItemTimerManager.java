@@ -1,6 +1,7 @@
 package com.example.plugin.utils;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
@@ -54,17 +55,11 @@ public class BedwarsItemTimerManager {
     public void start(Store<EntityStore> store, Player player) {
         started = true;
 
-        EventTitleUtil.showEventTitleToUniverse(Message.raw("Ticking :D"), Message.raw("Timer commenced."), true, null, 5, 1, 1);
+        BedwarsMessenger.notifyForgeTicking(player, store);
             scheduler.scheduleAtFixedRate(() -> {
                 for (BedwarsItemTimer timer : times) {
                     if (plugin.gameCommenced() && started) {
                         timer.tick(store, player);
-                    }
-                }
-                if (plugin.debugMode()) {
-                    count++;
-                    if (count % 10 == 0) {
-                        EventTitleUtil.showEventTitleToUniverse(Message.raw("Tick"), Message.raw("Tock"), true, null, 100, 1,0);
                     }
                 }
             },0,1, TimeUnit.SECONDS);

@@ -3,16 +3,13 @@ package com.example.plugin.controllers;
 import com.example.plugin.Bedwars;
 import com.example.plugin.managers.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsPlayerManager;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
-import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,10 +37,10 @@ public class BedwarsInGameQueueController {
      */
     public void addPlayer(Ref<EntityStore> ref, Player player) {
          // If game has started, render them dead or eliminated.
-            player.sendMessage(Message.raw("Three or more people required to play."));
+            BedwarsMessenger.notEnoughPlayersMessage(player);
             BedwarsPlayerManager.add(ref, player);
             updateQueue();
-        //player.getWorld().drainPlayersTo(); // Send them back to server lobby.
+        // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
     }
 
     /**
@@ -79,7 +76,13 @@ public class BedwarsInGameQueueController {
     public void startOrCompleteCountdown(boolean complete) {
         if (complete) {
             stopCountdown();
+            for (Ref<EntityStore> player : BedwarsPlayerManager.getIndexOfPlayers()) {
+                BedwarsMessenger.queueDoneTestMessage(BedwarsPlayerManager.get(player).getPlayer());
+            }
             // Call to send players to game, select teams, start ticking resources, make eligible for rejoin, etc.
+            // TODO: Register the first map, then develop this.
+            // start ticking resources...
+
         }
         startCountdown();
     }
@@ -91,15 +94,16 @@ public class BedwarsInGameQueueController {
 
         secondsRemaining = startTime; // Reset to start time, assuming secondsRemaining will stay decremented after any potential reset.
 
+        BedwarsMessenger.queueTimeRemaining(secondsRemaining);
         scheduler.scheduleAtFixedRate(() -> {
             if (secondsRemaining > 0) {
                 secondsRemaining--;
-                // Update text on the right-side bar
+                BedwarsMessenger.queueTimeRemaining(secondsRemaining);
             } else {
                 // Entering game...
                 startOrCompleteCountdown(true);
             }
-        },0,1, TimeUnit.SECONDS);
+        },1,1, TimeUnit.SECONDS);
     }
 
     /**
