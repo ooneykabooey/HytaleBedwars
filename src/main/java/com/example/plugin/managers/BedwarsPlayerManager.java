@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+
+///  @author yasha, ooney
+
 /**
  * Global registry for all BedWars players.
  * ECS-friendly: tracks players using Ref<EntityStore> as identity.

@@ -7,6 +7,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 
 import javax.annotation.Nonnull;
 
+///  @author ooney.
+
 public class DebugCommand extends CommandBase {
 
     private final Bedwars plugin;

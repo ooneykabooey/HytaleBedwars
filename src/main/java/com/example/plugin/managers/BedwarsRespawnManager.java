@@ -12,6 +12,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
+/// @author yasha, ooney
+
 public class BedwarsRespawnManager extends RespawnSystems.OnRespawnSystem {
 
     @Nonnull

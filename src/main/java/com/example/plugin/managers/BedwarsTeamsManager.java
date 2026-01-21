@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/// @author ooney
+
 public class BedwarsTeamsManager {
 
     public static final String[] TEAM_COLORS = {"red", "orange", "yellow", "green", "aqua", "pink", "white", "blue"};

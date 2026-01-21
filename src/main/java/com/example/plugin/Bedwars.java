@@ -21,6 +21,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
+/// @author ooney, yasha
+
 ///  MAIN PLUGIN BRANCH.
 public class Bedwars extends JavaPlugin {
 

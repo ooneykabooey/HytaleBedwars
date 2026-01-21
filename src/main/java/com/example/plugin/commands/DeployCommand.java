@@ -11,6 +11,9 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Locale;
 
+/// @author ooney
+/// TODO: Make this open the UI, not execute.
+
 public class DeployCommand extends CommandBase {
 
     private final Bedwars plugin;

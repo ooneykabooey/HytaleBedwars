@@ -4,6 +4,8 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import java.util.HashMap;
 import java.util.Map;
 
+/// @author yasha
+
 /**
  * Central authority for tracking all beds in the BedWars game.
  */

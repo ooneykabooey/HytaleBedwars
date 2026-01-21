@@ -18,6 +18,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.List;
 
+/// @author ooney
+
 public class BedwarsItemTimer {
 
     private int start; // Amount of time to restart with.

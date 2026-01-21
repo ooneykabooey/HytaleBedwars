@@ -8,8 +8,10 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.EntityEffect;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.Entity;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -17,6 +19,10 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import javax.annotation.Nonnull;
+
+
+/// @author yasha
 
 public class TestUIPage extends InteractiveCustomUIPage<TestUIPage.GreetEventData> {
 
@@ -50,8 +56,16 @@ public class TestUIPage extends InteractiveCustomUIPage<TestUIPage.GreetEventDat
     }
 
     @Override
-    public void handleDataEvent(Ref<EntityStore> ref, Store<EntityStore> store, GreetEventData data) {
-        String name = data.playerName != null ? data.playerName : "Stranger";
+    public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull GreetEventData data) {
+
+        Player player = store.getComponent(ref, Player.getComponentType());
+
+        String name = data.playerName != null && !data.playerName.isEmpty()
+                ? data.playerName
+                : "Stranger";
+
         playerRef.sendMessage(Message.raw("Hello, " + name + "!"));
+
+        player.getPageManager().setPage(ref, store, Page.None);
     }
 }

@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+/// @author ooney
+
 // When player DAMAGES block...
 public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlockEvent> {
 

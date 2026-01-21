@@ -7,6 +7,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.HashSet;
 import java.util.Set;
 
+/// @author yasha, ooney
+
 /**
  * Represents a BedWars team and tracks its state.
  */
