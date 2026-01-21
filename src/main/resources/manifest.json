@@ -3,5 +3,7 @@
   "Name" : "Bedwars",
   "Version" : "1.0.0",
   "Main" : "com.example.plugin.Bedwars",
-  "IncludesAssetPack": true
+  "IncludesAssetPack": true,
+  "Dependencies": {},
+  "OptionalDependencies": {}
 }

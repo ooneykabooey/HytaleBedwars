@@ -1,0 +1,75 @@
+// Welcome UI
+
+// Defining Styles
+@CloseButtonStyle = TextButtonStyle(
+  Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #3b4552, LabelStyle: (FontSize: 13, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #1b2532, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+
+
+
+// Import Common ui for the TextField
+$C ="../Common.ui";
+Group #Main {
+    LayoutMode: Top;
+    Background: #2a2a2a;
+    Anchor: (Width: 800, Height: 800);
+    Label #Title {
+      Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
+      Anchor: (Height: 40);
+      Text: "Welcome!";
+    }
+
+    Group {
+      LayoutMode: Top;
+      Background: #2a2a2a;
+      FlexWeight: 1;
+      Label {
+      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
+      Text: "This UI is designed for builders to make their bedwars map into a functional game, with team
+spawns, resource locations, etc.";
+      }
+      Group {Anchor: (Height: 16);}
+      Label {
+        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
+        Text: "There are a set of conditions to meet before deploying, this UI will make it easy to
+register those conditions so the map can be deployed.";
+      }
+      Group {Anchor: (Height: 16);}
+      Label {
+        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
+        Text: "We heavily recommend having a list of all of the different coordinates of the following
+before starting, you will have to re-do the registry if anything is invalid:
+
+- Queue spawn location
+- All team spawn locations
+- All team bed locations
+- All team resource locations
+- Desired gamemode
+- 4 (Diamond) resource locations
+- 2 (Emerald) resource locations";
+        }
+      }
+  Group {
+    Anchor: (Height: 32);
+    LayoutMode: Center;
+    Label {
+      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
+      Text: "Your map looks great! Ready to start? Click the BEGIN button to start";
+    }
+  }
+
+  Group #WelcomeButtons {
+    LayoutMode: Center;
+    $C.@CancelTextButton #WelcomeButtonsCancel {
+      @Text = "CANCEL";
+    }
+    Group {Anchor: (Width: 60);}
+    $C.@TextButton #WelcomeButtonsBegin {
+      @Text = "BEGIN";
+    }
+  }
+}
+
