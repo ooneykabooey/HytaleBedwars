@@ -12,13 +12,8 @@ import java.util.List;
 
 public class BedwarsTeamsManager {
 
-    public static final String[] DEFAULT_TEAM_COLORS = {"red", "orange", "yellow", "green", "aqua", "pink", "white", "blue"};
     public ArrayList<BedwarsTeam> teams = null; //TODO: admin needs to determine team name, color, and spawn/resource coords.
 
-    // TODO: If Threes or Fours, only have red, blue, green, and yellow in the list to pick from.
-    // TODO: If players are in a party together, make sure they are always on the same team.
-    // TODO: From server lobby, prevent players from joining modes with too high of a party, UNLESS its ones.
-    // TODO: Add a check for full occupation within a team, depends on the mode as well.
 
     // Give the players their team assignments.
     public void initializeTeams() {

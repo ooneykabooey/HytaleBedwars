@@ -14,10 +14,10 @@ import java.util.Set;
  */
 public class BedwarsTeam {
 
-    private final String id; // "red", "blue", etc
-    private final Vector3d spawnLocation;
+    private String id; // "red", "blue", etc
+    private Vector3d spawnLocation;
     private boolean bedAlive = true;
-    private final Vector3d forgeLocation;
+    private Vector3d forgeLocation;
 
     // ECS-entity references instead of UUIDs
     private final Set<Ref<EntityStore>> players = new HashSet<>();
@@ -72,6 +72,21 @@ public class BedwarsTeam {
      */
     public boolean containsPlayer(Ref<EntityStore> ref) {
         return players.contains(ref);
+    }
+
+
+    /// TEAM SETTERS
+
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    public void setSpawnLocation(Vector3d vector) {
+        this.spawnLocation = vector;
+    }
+
+    public void setForgeLocation(Vector3d vector) {
+        this.forgeLocation = vector;
     }
 
 

@@ -19,13 +19,11 @@ Group {
     LayoutMode: Center;
     Background: #2a2a2a;
     Label {
-      Text: "Specify where each team's spawn will be";
+      Text: "Specify where this team's spawn will be";
     }
   }
 
-  $C.@DropdownBox #TeamColorDropdown {
-    Anchor: (Width: 200, Height: 40);
-  }
+
   Group {
     LayoutMode: Top;
     Group {

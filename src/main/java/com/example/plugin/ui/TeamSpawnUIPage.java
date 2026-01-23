@@ -33,26 +33,27 @@ import java.util.List;
 public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.TeamSelectedData> {
 
     private BedwarsMap thisMap;
+    private BedwarsTeam thisTeam;
     private GAMEMODE gamemode;
 
-    private List<TeamColor> getAllowedTeams() {
-        if (gamemode == null) return List.of();
-        return BedwarsMap.teamsPerGamemode.getOrDefault(gamemode, List.of());
-    }
-
-    private List<DropdownEntryInfo> buildTeamEntries() {
-        return getAllowedTeams().stream()
-                .map(color -> new DropdownEntryInfo(
-                        LocalizableString.fromString(color.getDisplayName()),
-                        color.name()
-                ))
-                .toList();
-    }
+//    private List<TeamColor> getAllowedTeams() {
+//        if (gamemode == null) return List.of();
+//        return BedwarsMap.teamsPerGamemode.getOrDefault(gamemode, List.of());
+//    }
+//
+//    private List<DropdownEntryInfo> buildTeamEntries() {
+//        return getAllowedTeams().stream()
+//                .map(color -> new DropdownEntryInfo(
+//                        LocalizableString.fromString(color.getDisplayName()),
+//                        color.name()
+//                ))
+//                .toList();
+//    }
 
 
     public static class TeamSelectedData {
         public String button;
-        public String team;
+        //public String team;
         public String inputXText = "0";
         public String inputYText = "0";
         public String inputZText = "0";
@@ -64,11 +65,11 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                                 (obj, val) -> obj.button = val,
                                 obj -> obj.button
                         )
-                        .addField(
-                                new KeyedCodec<>("@TeamValue", Codec.STRING),
-                                (obj, val) -> obj.team = val,
-                                obj -> obj.team
-                        )
+//                        .addField(
+//                                new KeyedCodec<>("@TeamValue", Codec.STRING),
+//                                (obj, val) -> obj.team = val,
+//                                obj -> obj.team
+//                        )
                         .addField(
                                 new KeyedCodec<>("@InputX", Codec.STRING),
                                 ( obj, val) -> obj.inputXText = val,
@@ -87,9 +88,10 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                         .build();
     }
 
-    public TeamSpawnUIPage(@Nonnull PlayerRef playerRef, BedwarsMap map) {
+    public TeamSpawnUIPage(@Nonnull PlayerRef playerRef, BedwarsMap map, BedwarsTeam team) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, TeamSelectedData.CODEC);
         thisMap = map;
+        thisTeam = team;
         this.gamemode = map.getGamemode();
     }
 
@@ -99,17 +101,17 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
         cmd.append("Pages/TeamSpawn.ui");
 
         // Populating the dropdown
-        cmd.set("#TeamColorDropdown.Entries", buildTeamEntries());
-        cmd.set("#TeamColorDropdown.Value", GAMEMODE.ONES.name());
+//        cmd.set("#TeamColorDropdown.Entries", buildTeamEntries());
+//        cmd.set("#TeamColorDropdown.Value", GAMEMODE.ONES.name());
 
-        // Reading values from the dropdown
-        evt.addEventBinding(
-                CustomUIEventBindingType.ValueChanged,
-                "#TeamColorDropdown",
-                EventData.of("Button", "TeamColorDropdown")
-                        .append("@TeamValue", "#TeamColorDropdown.Value"),
-                false
-        );
+//        // Reading values from the dropdown
+//        evt.addEventBinding(
+//                CustomUIEventBindingType.ValueChanged,
+//                "#TeamColorDropdown",
+//                EventData.of("Button", "TeamColorDropdown")
+//                        .append("@TeamValue", "#TeamColorDropdown.Value"),
+//                false
+//        );
 
         // Binding "Save" to send the data
         evt.addEventBinding(
@@ -118,8 +120,7 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                 EventData.of("Button", "Coords")
                         .append("@InputX", "#InputX.Value")
                         .append("@InputY", "#InputY.Value")
-                        .append("@InputZ", "#InputZ.Value")
-                        .append("@TeamValue", "#TeamColorDropdown.Value"),
+                        .append("@InputZ", "#InputZ.Value"),
                 false
         );
 
@@ -154,24 +155,21 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                 }
 
 
-                case "TeamColorDropdown" -> {
-                    TeamColor selected = TeamColor.valueOf(data.team);
-
-                    player.sendMessage(
-                            Message.raw("Selected team: " + selected.getDisplayName())
-                    );
-                }
+//                case "TeamColorDropdown" -> {
+//                    TeamColor selected = TeamColor.valueOf(data.team);
+//
+//                    player.sendMessage(
+//                            Message.raw("Selected team: " + selected.getDisplayName())
+//                    );
 
                 case "Coords" -> {
 
-                    TeamColor selected = TeamColor.valueOf(data.team);
-
-                    if (data.team == null) {
-                        player.sendMessage(Message.raw("Please select a team before saving!"));
-                        return;
-                    }
-
-
+//                    TeamColor selected = TeamColor.valueOf(data.team);
+//
+//                    if (data.team == null) {
+//                        player.sendMessage(Message.raw("Please select a team before saving!"));
+//                        return;
+//                    }
 
                     try {
                         // Gather double values.
@@ -179,33 +177,24 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                         double y = data.inputYText != null && !data.inputYText.isEmpty() ? Double.parseDouble(data.inputYText) : 0;
                         double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
 
-                        // Message the player the coords they entered.
-                        BedwarsMessenger.coordinateEntry(player, x, y, z, "team spawn");
-                        player.sendMessage(
-                                Message.raw("For the " + selected.getDisplayName() + " team!")
-                        );
+                        // Message the player the coords they entered for what location.
+                        BedwarsMessenger.coordinateEntry(player, x, y, z, thisTeam.getId() + " team's spawn!");
 
-                        // Add the data to the BedwarsMap.
-                        thisMap.setQueueSpawn(new com.hypixel.hytale.math.vector.Vector3d(x, y, z));
-
-                        TeamColor color = TeamColor.valueOf(data.team);
                         Vector3d spawn = new Vector3d(x, y, z);
+                        thisTeam.setSpawnLocation(spawn);
 
                         /// It needs a forge location, so we use the spawn as a placeholder and update it in the next UI
-                        BedwarsTeam team = new BedwarsTeam(color.name(), spawn, spawn);
 
                         // If the numbers aren't numbers.
                     } catch (NumberFormatException e) {
                         BedwarsMessenger.invalidDoubleEntry(player);
                     }
-
-
-
-                }
-                case "Next" -> {
+                } case "Next" -> {
                     // Plug in the next UI page here
-                    // player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap));
+                    // player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));
+                    // TODO: When registering the team completes, add it to the BedwarsTeamManager's list, and take the user back to the team color select if they still have teams to pick. (If the ArrayList is size x for which the gamemode allows--Solos/Duos: 8 teams, Trios/Squads: 4, SquadvSquad: 2).
                 }
+            }
         }
     }
-}
+
