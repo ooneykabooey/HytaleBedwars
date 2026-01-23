@@ -2,18 +2,16 @@ package com.example.plugin;
 
 import com.example.plugin.commands.DebugCommand;
 import com.example.plugin.commands.DeployCommand;
-import com.example.plugin.commands.TestUICommand;
+import com.example.plugin.commands.TeamSizeUICommand;
+import com.example.plugin.commands.WelcomeUICommand;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
-import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
-import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -58,8 +56,9 @@ public class Bedwars extends JavaPlugin {
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
 
         this.getCommandRegistry().registerCommand(new DeployCommand(this));
-        this.getCommandRegistry().registerCommand(new TestUICommand());
+        this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
+        this.getCommandRegistry().registerCommand(new TeamSizeUICommand());
 
 
 //        resourceTimer.start();
