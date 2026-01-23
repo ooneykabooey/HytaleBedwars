@@ -2,6 +2,7 @@ package com.example.plugin;
 
 import com.example.plugin.commands.*;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
@@ -15,6 +16,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /// @author ooney, yasha
 
@@ -34,6 +36,9 @@ public class Bedwars extends JavaPlugin {
     // Metadata
     private final String pluginName = "Hytale Bedwars";
     private final String pluginVersion = "1.0.0";
+
+    // Map Data
+
 
     // Constructor
     public Bedwars(@Nonnull JavaPluginInit init) {

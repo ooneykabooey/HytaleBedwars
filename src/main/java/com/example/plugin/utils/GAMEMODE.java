@@ -9,6 +9,4 @@ public enum GAMEMODE {
         THREES,
         FOURS,
         FOURAFOUR;
-
-
 }

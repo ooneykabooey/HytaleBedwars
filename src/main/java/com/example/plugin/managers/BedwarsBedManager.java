@@ -1,5 +1,6 @@
 package com.example.plugin.managers;
 
+import com.example.plugin.entityinstances.BedwarsTeam;
 import com.hypixel.hytale.math.vector.Vector3d;
 import java.util.HashMap;
 import java.util.Map;

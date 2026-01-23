@@ -1,0 +1,21 @@
+package com.example.plugin.entityinstances;
+
+
+import com.example.plugin.utils.BedwarsItemTimer;
+import com.hypixel.hytale.math.vector.Vector3d;
+
+///  @author ooney
+///  This is an item spawner FOR MID RESOURCES, contains the item timer, and an ID for what resource it is, as well as any getter/setter methods..
+public class BedwarsMidResource {
+
+    private Vector3d resourceLocation;
+    private BedwarsItemTimer spawner;
+    private String ID; // FIRE, VOID
+
+    public BedwarsMidResource(Vector3d resourceLocation, String ID, int duration) {
+        // TODO: Need the data from the resource type dropdown from the resource UI.
+
+    }
+
+
+}

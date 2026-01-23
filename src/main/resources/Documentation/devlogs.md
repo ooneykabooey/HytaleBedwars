@@ -65,3 +65,14 @@ There are upgrades teams can buy.
 - Iron, Gold, Emerald forge.
 - Proximity alarm
 - Spawn mobs.
+
+# For UI Sequence - Backend
+
+When the user starts the registry process, a BedwarsMap thisMap is created.
+
+thisMap will take submitted data and will be passed on in the next page's constructor as part of its "thisMap."
+
+it will keep taking data until the BedwarsMap is complete, if anything is missing, there will be checks ran and the player will be notified/stopped from making progress in their registry.
+
+The BedwarsMapManager is a parallel universe that stores BedwarsMaps in a set. They are to be accessed from a server lobby to pick from randomly when entering a bedwars queue.
+

@@ -1,5 +1,7 @@
 package com.example.plugin.ui;
 
+import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -21,30 +23,30 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 
 /// @author yasha
 
 public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamSizeData> {
 
-    // Makes the enum readable lol
-    private static String formatGamemodeName(GAMEMODE mode) {
-        return switch (mode) {
-            case ONES -> "Solos (1v1s)";
-            case TWOS -> "Doubles (2v2s)";
-            case THREES -> "Trios (3v3s)";
-            case FOURS -> "Squads (4v4s)";
-            case FOURAFOUR -> "Squad v Squad (4v4)";
-        };
-    }
+    private BedwarsMap thisMap;
 
-    // blah blah blah convert to data or sum. Imma be so fr chat gpt had to help out with this one :pray:
-    List<DropdownEntryInfo> entries = Arrays.stream(GAMEMODE.values())
-            .map(mode -> new DropdownEntryInfo(
-                    LocalizableString.fromString(formatGamemodeName(mode)),
-                    mode.name()
+    // Converted to Object[] Array, the list of gamemodes and their names are now in BedwarsMap.possibleGamemodes map.
+    private Object[] gamemodes = BedwarsMap.possibleGamemodes.keySet().toArray();
+
+
+    /** How this works
+     *  Arrays.stream grabs from an Object[].
+     *  Which is given by the possibleGamemodes map keys, converted to a set, converted to a map.
+     * @param s in the .map statement is a new dropdown entry that has the key, and the value being the map of it off possibleGamemodes.
+     * If this sounds confusing, I agree. I spent about 2 hours on this.
+     */
+    List<DropdownEntryInfo> entries = Arrays.stream((gamemodes))
+            .map(s -> new DropdownEntryInfo(
+                    LocalizableString.fromString(String.valueOf(s)),
+                    BedwarsMap.possibleGamemodes.get(String.valueOf(s)).name()
             ))
             .toList();
 
@@ -68,8 +70,9 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
 
     }
 
-    public TeamSizeUIPage(PlayerRef playerRef) {
+    public TeamSizeUIPage(PlayerRef playerRef, BedwarsMap map) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, TeamSizeData.CODEC);
+        thisMap = map;
     }
 
     @Override
@@ -79,7 +82,7 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
 
         cmd.set("#TeamDropdown.Entries", entries);
 
-        cmd.set("#TeamDropdown.Value", GAMEMODE.TWOS.name());
+        cmd.set("#TeamDropdown.Value", GAMEMODE.ONES.name());
 
         evt.addEventBinding(
                 CustomUIEventBindingType.ValueChanged,
@@ -109,6 +112,8 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
 
         Player player = store.getComponent(ref, Player.getComponentType());
 
+        assert player != null : "Player is somehow null, in TeamSizeUIPage.handleDataEvent().";
+
 
         switch (data.button) {
 
@@ -119,15 +124,20 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
             case "TeamDropdown" -> {
                 GAMEMODE selected = GAMEMODE.valueOf(data.teamValue);
 
-                player.sendMessage(
-                        Message.raw("Selected gamemode: " + selected.name())
-                );
+                BedwarsMessenger.selectedGamemode(player, selected);
 
                 //TODO Send the selected gamemode
+                thisMap.setGamemode(selected);
+
+
             }
 
             case "Next" -> {
-                player.getPageManager().openCustomPage(ref, store, new QueueUIPage(playerRef));
+                if (thisMap.getGamemode() == null) { // Do not allow player to pass without entering a valid value.
+                    BedwarsMessenger.gamemodeNotSelected(player);
+                } else {
+                    player.getPageManager().openCustomPage(ref, store, new QueueUIPage(playerRef, thisMap));
+                }
             }
         }
     }

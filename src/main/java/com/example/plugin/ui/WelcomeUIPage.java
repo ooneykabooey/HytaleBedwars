@@ -1,5 +1,6 @@
 package com.example.plugin.ui;
 
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -24,10 +25,10 @@ import javax.annotation.Nonnull;
 /// @author yasha
 
 public class WelcomeUIPage extends InteractiveCustomUIPage<WelcomeUIPage.WelcomeEventData> {
+    public BedwarsMap thisMap;
 
     public static class WelcomeEventData {
             public String button; // UI routes here
-            public String teamValue;
 
             public static final BuilderCodec<WelcomeEventData> CODEC =
                     BuilderCodec.builder(WelcomeUIPage.WelcomeEventData.class, WelcomeUIPage.WelcomeEventData::new)
@@ -39,12 +40,13 @@ public class WelcomeUIPage extends InteractiveCustomUIPage<WelcomeUIPage.Welcome
                             .build();
     }
 
-    public WelcomeUIPage(PlayerRef playerRef) {
+    public WelcomeUIPage(PlayerRef playerRef, BedwarsMap map) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, WelcomeEventData.CODEC);
+        thisMap = map;
     }
 
     @Override
-    public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
+    public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder cmd, @Nonnull UIEventBuilder evt, @Nonnull Store<EntityStore> store) {
 
         cmd.append("Pages/Welcome.ui");
 
@@ -75,7 +77,7 @@ public class WelcomeUIPage extends InteractiveCustomUIPage<WelcomeUIPage.Welcome
             }
 
             case "Begin" -> {
-                 player.getPageManager().openCustomPage(ref, store, new TeamSizeUIPage(playerRef));
+                 player.getPageManager().openCustomPage(ref, store, new TeamSizeUIPage(playerRef, thisMap));
             }
         }
     }

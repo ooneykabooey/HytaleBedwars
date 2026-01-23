@@ -214,7 +214,24 @@ public class BedwarsMessenger {
         );
     }
 
+    ///  UI
 
+    public static void selectedGamemode(Player player, GAMEMODE gamemode) {
+        player.sendMessage(Message.raw("Selected gamemode: " + gamemode.name()));
+    }
 
+    public static void gamemodeNotSelected(Player player) {
+        player.sendMessage(Message.raw("You must select a gamemode before continuing!!!"));
+    }
+
+    public static void invalidDoubleEntry(Player player) {
+        player.sendMessage(Message.raw("Please only enter valid numbers! Examples: 1, 23, 29.3"));
+    }
+
+    public static void coordinateEntry(Player player, double x, double y, double z, String whatFor) {
+        player.sendMessage(Message.raw(
+                "You entered the coordinates: " + x + ", " + y + " and " + z + " for the " + whatFor + "!"
+        ));
+    }
 
 }

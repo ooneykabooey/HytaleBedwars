@@ -1,12 +1,14 @@
 package com.example.plugin.ui;
 
+import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.protocol.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
@@ -26,14 +28,13 @@ import javax.annotation.Nonnull;
 
 public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> {
 
-
+    private BedwarsMap thisMap;
 
     public static class QueueData {
         public String button;
         public String inputXText = "0";
         public String inputYText = "0";
         public String inputZText = "0";
-        public Vector3d position;
 
         public static final BuilderCodec<QueueData> CODEC =
                 BuilderCodec.builder(QueueData.class, QueueData::new)
@@ -61,8 +62,9 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
 
     }
 
-    public QueueUIPage(PlayerRef playerRef) {
+    public QueueUIPage(PlayerRef playerRef, BedwarsMap map) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, QueueData.CODEC);
+        thisMap = map;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull QueueData data) {
 
         Player player = store.getComponent(ref, Player.getComponentType());
+        assert player != null;
 
          if (data.button == null) return; // safety check
 
@@ -107,19 +110,20 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
 
             case "Coords" -> {
                 try {
+                    // Gather double values.
                     double x = data.inputXText != null && !data.inputXText.isEmpty() ? Double.parseDouble(data.inputXText) : 0;
                     double y = data.inputYText != null && !data.inputYText.isEmpty() ? Double.parseDouble(data.inputYText) : 0;
                     double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
 
-                    data.position = new Vector3d(x, y, z);
+                    // Message the player the coords they entered.
+                    BedwarsMessenger.coordinateEntry(player, x, y, z, "queue");
 
-                    player.sendMessage(Message.raw(
-                            "You entered the coordinates: " + x + ", " + y + " and " + z + " for the queue!"
-                    ));
+                    // Add the data to the BedwarsMap.
+                    thisMap.setQueueSpawn(new Vector3d(x, y, z));
 
-                    //TODO Send Vector3d to Queue system
+                    // If the numbers aren't numbers.
                 } catch (NumberFormatException e) {
-                    player.sendMessage(Message.raw("Please only enter valid numbers! Examples: 1, 23, 29.3"));
+                    BedwarsMessenger.invalidDoubleEntry(player);
                 }
 
             }
@@ -129,7 +133,7 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
             }
 
             case "Next" -> {
-               // player.getPageManager(ref, store, PAGE);
+                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
             }
 
 

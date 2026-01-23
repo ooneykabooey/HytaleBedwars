@@ -1,4 +1,4 @@
-package com.example.plugin.managers;
+package com.example.plugin.entityinstances;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;

@@ -1,29 +1,19 @@
 package com.example.plugin.managers;
 
-import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsTeam;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /// @author ooney
 
 public class BedwarsTeamsManager {
 
-    public static final String[] TEAM_COLORS = {"red", "orange", "yellow", "green", "aqua", "pink", "white", "blue"};
-    public List<BedwarsTeam> teams = List.of( // TODO: Have the Vector3ds be determined by admin.
-            new BedwarsTeam("red", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("orange", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("yellow", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("green", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("aqua", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("pink", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("white", new Vector3d(0,0,0), new Vector3d(0,0,0)),
-            new BedwarsTeam("blue", new Vector3d(0,0,0), new Vector3d(0,0,0))
-    );
+    public static final String[] DEFAULT_TEAM_COLORS = {"red", "orange", "yellow", "green", "aqua", "pink", "white", "blue"};
+    public ArrayList<BedwarsTeam> teams = null; //TODO: admin needs to determine team name, color, and spawn/resource coords.
 
     // TODO: If Threes or Fours, only have red, blue, green, and yellow in the list to pick from.
     // TODO: If players are in a party together, make sure they are always on the same team.
@@ -38,6 +28,27 @@ public class BedwarsTeamsManager {
             BedwarsPlayerManager.get(playerKey).setTeam(teams.get((int) Math.floor(Math.random() * 8)));
 
         }
+    }
+
+    public void addToTeam(BedwarsTeam team) {
+        teams.add(team);
+    }
+
+    public void removeTeam(BedwarsTeam team) {
+        teams.remove(team);
+    }
+
+    public BedwarsTeam getTeam(BedwarsTeam team) {
+        for (BedwarsTeam t : teams) {
+            if (t.equals(team)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<BedwarsTeam> getTeams() {
+        return teams;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.plugin.commands;
 
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.ui.QueueUIPage;
 import com.example.plugin.ui.TeamSizeUIPage;
 import com.hypixel.hytale.component.Ref;
@@ -12,7 +13,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 ///  @author  yasha
-
+@Deprecated // don't use, it will break the registry by skipping certain things.
 public class QueueUICommand extends AbstractPlayerCommand {
 
     public QueueUICommand() {
@@ -23,7 +24,7 @@ public class QueueUICommand extends AbstractPlayerCommand {
     protected void execute(CommandContext crx, Store<EntityStore> store, Ref<EntityStore> ref, PlayerRef playerRef, World world) {
         Player player = store.getComponent(ref, Player.getComponentType());
 
-        QueueUIPage page = new QueueUIPage(playerRef);
+        QueueUIPage page = new QueueUIPage(playerRef, new BedwarsMap(player.getWorld()));
 
         player.getPageManager().openCustomPage(ref, store, page);
     }

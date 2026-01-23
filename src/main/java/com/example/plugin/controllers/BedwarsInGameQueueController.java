@@ -1,14 +1,12 @@
 package com.example.plugin.controllers;
 
 import com.example.plugin.Bedwars;
-import com.example.plugin.managers.BedwarsPlayer;
+import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

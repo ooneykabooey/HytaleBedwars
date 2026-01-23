@@ -1,5 +1,6 @@
 package com.example.plugin.commands;
 
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.ui.WelcomeUIPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -22,7 +23,7 @@ public class WelcomeUICommand extends AbstractPlayerCommand {
     protected void execute(CommandContext crx, Store<EntityStore> store, Ref<EntityStore> ref, PlayerRef playerRef, World world) {
         Player player = store.getComponent(ref, Player.getComponentType());
 
-        WelcomeUIPage page = new WelcomeUIPage(playerRef);
+        WelcomeUIPage page = new WelcomeUIPage(playerRef, new BedwarsMap(player.getWorld()));
 
         player.getPageManager().openCustomPage(ref, store, page);
     }
