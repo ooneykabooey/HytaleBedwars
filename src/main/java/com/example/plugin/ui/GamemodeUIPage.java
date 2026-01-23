@@ -11,7 +11,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.DropdownEntryInfo;
@@ -24,12 +23,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-import java.util.stream.Stream;
 
 
 /// @author yasha
 
-public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamSizeData> {
+public class GamemodeUIPage extends InteractiveCustomUIPage<GamemodeUIPage.TeamSizeData> {
 
     private BedwarsMap thisMap;
 
@@ -52,7 +50,7 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
 
     public static class TeamSizeData {
         public String button; // UI routes here
-        public String teamValue;
+        public String gameValue;
 
         public static final BuilderCodec<TeamSizeData> CODEC =
                 BuilderCodec.builder(TeamSizeData.class, TeamSizeData::new)
@@ -63,14 +61,14 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
                         )
                         .addField(
                                 new KeyedCodec<>("@TeamValue", Codec.STRING),
-                                (obj, val) -> obj.teamValue = val,
-                                obj -> obj.teamValue
+                                (obj, val) -> obj.gameValue = val,
+                                obj -> obj.gameValue
                         )
                         .build();
 
     }
 
-    public TeamSizeUIPage(PlayerRef playerRef, BedwarsMap map) {
+    public GamemodeUIPage(PlayerRef playerRef, BedwarsMap map) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, TeamSizeData.CODEC);
         thisMap = map;
     }
@@ -78,7 +76,7 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
     @Override
     public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
 
-        cmd.append("Pages/TeamSize.ui");
+        cmd.append("Pages/Gamemode.ui");
 
         cmd.set("#TeamDropdown.Entries", entries);
 
@@ -122,7 +120,7 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
             }
 
             case "TeamDropdown" -> {
-                GAMEMODE selected = GAMEMODE.valueOf(data.teamValue);
+                GAMEMODE selected = GAMEMODE.valueOf(data.gameValue);
 
                 BedwarsMessenger.selectedGamemode(player, selected);
 

@@ -2,7 +2,6 @@ package com.example.plugin;
 
 import com.example.plugin.commands.*;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
-import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
@@ -16,7 +15,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 
 /// @author ooney, yasha
 
@@ -60,7 +58,7 @@ public class Bedwars extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DeployCommand(this));
         this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
-        this.getCommandRegistry().registerCommand(new TeamSizeUICommand());
+        this.getCommandRegistry().registerCommand(new GamemodeUICommand());
         this.getCommandRegistry().registerCommand(new QueueUICommand());
 
 

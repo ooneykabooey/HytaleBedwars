@@ -2,7 +2,6 @@ package com.example.plugin.commands;
 
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.ui.QueueUIPage;
-import com.example.plugin.ui.TeamSizeUIPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;

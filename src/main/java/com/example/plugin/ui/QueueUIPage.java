@@ -12,7 +12,6 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -133,7 +132,7 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
             }
 
             case "Next" -> {
-                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
+                player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
             }
 
 

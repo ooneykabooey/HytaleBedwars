@@ -1,7 +1,6 @@
 package com.example.plugin.ui;
 
 import com.example.plugin.entityinstances.BedwarsMap;
-import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -10,7 +9,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -77,7 +75,7 @@ public class WelcomeUIPage extends InteractiveCustomUIPage<WelcomeUIPage.Welcome
             }
 
             case "Begin" -> {
-                 player.getPageManager().openCustomPage(ref, store, new TeamSizeUIPage(playerRef, thisMap));
+                 player.getPageManager().openCustomPage(ref, store, new GamemodeUIPage(playerRef, thisMap));
             }
         }
     }

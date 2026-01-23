@@ -1,0 +1,76 @@
+/// @author ooney, yasha
+/// Registers a team to a BedwarsMap.
+
+$C = "../Common.ui";
+Group {
+  LayoutMode: Top;
+  Background: #2a2a2a;
+  Anchor: (Width: 800, Height:500);
+  Padding: (Full: 20);
+  Label #Title {
+    Padding: (Full: 0);
+    Text: "Select a team to register.";
+    Style: (TextColor: #ffffff, HorizontalAlignment: Center, FontSize: 30, RenderBold: true);
+  }
+
+  Group {Anchor: (Height: 40);}
+
+  Group {
+    LayoutMode: Center;
+    Background: #2a2a2a;
+    Label {
+      Text: "Specify where each team's spawn will be";
+    }
+  }
+
+  $C.@DropdownBox #TeamColorDropdown {
+    Anchor: (Width: 200, Height: 40);
+  }
+  Group {
+    LayoutMode: Top;
+    Group {
+      Anchor: (Width: 400, Height: 50);
+      $C.@TextField #InputX {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "X coordinate for team spawn";
+      }
+    }
+    Group {
+      Anchor: (Width: 400, Height: 50);
+
+      $C.@TextField #InputY {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "Y coordinate for team spawn";
+      }
+    }
+    Group {
+      Anchor: (Width: 400, Height: 50);
+
+      $C.@TextField #InputZ {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "Z coordinate for team spawn";
+      }
+    }
+
+    Group {
+      Anchor: (Width: 200);
+      $C.@TextButton #Save {
+        @Text = "SAVE";
+      }
+    }
+  }
+
+  Group { FlexWeight: 1;}
+
+  Group #Buttons {
+    FlexWeight: 1;
+    LayoutMode: Center;
+    $C.@CancelTextButton #ButtonsCancel {
+      @Text = "CANCEL";
+    }
+    Group {Anchor: (Width: 50);}
+    $C.@TextButton #ButtonsNext {
+      @Text = "NEXT";
+    }
+  }
+}

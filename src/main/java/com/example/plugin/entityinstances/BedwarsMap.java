@@ -2,10 +2,12 @@ package com.example.plugin.entityinstances;
 
 import com.example.plugin.managers.BedwarsTeamsManager;
 import com.example.plugin.utils.GAMEMODE;
+import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -27,6 +29,16 @@ public class BedwarsMap {
             "Squads (4v4s)", GAMEMODE.FOURS,
             "Squad v Squad (4v4)", GAMEMODE.FOURAFOUR
     );
+
+    // Get which teams are valid for the selected gamemode
+    public static final Map<GAMEMODE, List<TeamColor>> teamsPerGamemode =
+            Map.of(
+                    GAMEMODE.ONES, List.of(TeamColor.values()),
+                    GAMEMODE.TWOS, List.of(TeamColor.values()),
+                    GAMEMODE.THREES, List.of(TeamColor.values()),
+                    GAMEMODE.FOURS, List.of(TeamColor.values()),
+                    GAMEMODE.FOURAFOUR, List.of(TeamColor.RED, TeamColor.BLUE)
+            );
 
     // Set as null or default at first, the manager will run checks and the user will do setters on deployment.
     // This is so that the UI can throw errors upon deployment.
