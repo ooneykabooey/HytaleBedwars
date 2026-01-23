@@ -1,0 +1,73 @@
+// Set queue location UI
+// @author yasha
+
+// Import Common ui for the TextField
+$C ="../Common.ui";
+
+
+
+Group #Main {
+  LayoutMode: Top;
+  Background: #2a2a2a;
+  Anchor: (Width: 800, Height: 500);
+  Label #Title {
+    Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
+    Anchor: (Height: 40);
+    Text: "Queue";
+  }
+  Group { Anchor: (Height: 50); }
+  Group {
+    LayoutMode: Top;
+
+    Label #Title {
+      Style: (TextColor: #ffffff, FontSize: 16, RenderBold: true, Alignment: Center);
+      Anchor: (Height: 40);
+      Text: "Where will players spawn before the game?";
+    }
+    Group {
+      Anchor: (Width: 400, Height: 50);
+      $C.@TextField #InputX {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "X coordinate for queue spawn";
+      }
+    }
+    Group {
+      Anchor: (Width: 400, Height: 50);
+
+      $C.@TextField #InputY {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "Y coordinate for queue spawn";
+      }
+    }
+    Group {
+      Anchor: (Width: 400, Height: 50);
+
+      $C.@TextField #InputZ {
+        Style: (TextColor: #ffffff);
+        PlaceholderText: "Z coordinate for queue spawn";
+      }
+    }
+
+    Group {
+      Anchor: (Width: 200);
+      $C.@TextButton #Submit {
+        @Text = "SUBMIT";
+      }
+    }
+  }
+
+  Group { FlexWeight: 1;}
+
+  Group #Buttons {
+    FlexWeight: 1;
+    LayoutMode: Center;
+    $C.@CancelTextButton #ButtonsCancel {
+      @Text = "CANCEL";
+    }
+    Group {Anchor: (Width: 60);}
+    $C.@TextButton #ButtonsNext {
+      @Text = "NEXT";
+    }
+  }
+
+}

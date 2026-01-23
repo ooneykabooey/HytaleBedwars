@@ -123,11 +123,11 @@ public class TeamSizeUIPage extends InteractiveCustomUIPage<TeamSizeUIPage.TeamS
                         Message.raw("Selected gamemode: " + selected.name())
                 );
 
-                // setGamemode stuff goes here, will worry about it later
+                //TODO Send the selected gamemode
             }
 
             case "Next" -> {
-               // player.getPageManager(ref, store, PAGE);
+                player.getPageManager().openCustomPage(ref, store, new QueueUIPage(playerRef));
             }
         }
     }
