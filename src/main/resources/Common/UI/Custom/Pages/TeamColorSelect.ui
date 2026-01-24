@@ -3,82 +3,163 @@
 
 $C = "../Common.ui";
 Group {
-  LayoutMode: Top;
-  Background: #141c26(0.98);
-  Anchor: (Width: 800, Height:500);
-  Padding: (Full: 20);
-  Label #Label89bb42aa {
-    Padding: (Full: 0);
-    Text: "Select a team to register.";
-    Style: (TextColor: #ffffff, HorizontalAlignment: Center);
+  LayoutMode: Left;
+  Anchor: (Width: 800, Height:600);
+
+  Group #LeftPanel {
+    LayoutMode:Top;
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
+    Label {
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
+    }
+
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Welcome";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "End";
+    }
   }
-  Group #Groupa6c682c3 {
-    LayoutMode: Center;
-    Background: #141c26(0);
-    Anchor: (Top: 200);
-    Group #Group9a1d2f83 {
-      LayoutMode: Center;
-      Background: #141c26(0);
-      Padding: (Full: 0);
-      Button #RegisterRedTeam {
-        Background: #79342b;
-        Anchor: (Width: 50, Height: 50, Right: 10);
+
+  Group #RightPanel {
+    FlexWeight:1;
+    Background: #141c26(0.98);
+    LayoutMode:Top;
+    Padding: (Full:20);
+
+    Label #Label89bb42aa {
+      Anchor: (Height: 40);
+      Text: "Select a team to register.";
+      Style: (TextColor: #ffffff, FontSize:30, RenderBold: true, HorizontalAlignment: Center);
+    }
+
+    Group {Anchor: (Height:8);}
+
+    Group {
+      Anchor: (Height:3);
+      Background: #2b3542;
+    }
+
+    Group { Anchor: (Height: 150);}
+
+    Group {
+      LayoutMode: Top;
+      Group {
+        LayoutMode: Center;
         Padding: (Full: 0);
-        //        Text: "R";
+
+        Button #RegisterRedTeam {
+          Background: #79342b;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "R";
+        }
+
+        Button #RegisterOrangeTeam {
+          Background: #91621e;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "O";
+        }
+
+        Button #RegisterYellowTeam {
+          Background: #d5a631;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "Y";
+        }
+
+        Button #RegisterGreenTeam {
+          Background: #317447;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "G";
+        }
+
+        Button #RegisterCyanTeam {
+          Background: #377b7c;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "C";
+        }
       }
-      Button #RegisterOrangeTeam {
-        Background: #91621e;
-        Anchor: (Width: 50, Height: 50, Right: 10);
+
+      Group {Anchor: (Height: 10);}
+
+      Group {
+        LayoutMode: Center;
         Padding: (Full: 0);
-        //        Text: "O";
-      }
-      Button #RegisterYellowTeam {
-        Background: #d5a631;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-//        Text: "Y";
-      }
-      Button #RegisterGreenTeam {
-        Background: #317447;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        //        Text: "G";
-      }
-      Button #RegisterCyanTeam {
-        Background: #377b7c;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        //        Text: "C";
-      }
-      Button #RegisterBlueTeam {
-        Background: #26405d;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        //        Text: "B";
-      }
-      Button #RegisterPurpleTeam {
-        Background: #471937;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        //        Text: "PU";
-      }
-      Button #RegisterPinkTeam {
-        Background: #974f6e;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        //        Text: "PI";
-      }
-      Button #RegisterWhiteTeam {
-        Background: #e1e1e1;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-//        Text: "W";
-      }
-      Button #RegisterBlackTeam {
-        Background: #141414;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-//        Text: "K";
+
+        Button #RegisterBlueTeam {
+          Background: #26405d;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "B";
+        }
+
+        Button #RegisterPurpleTeam {
+          Background: #471937;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "PU";
+        }
+
+        Button #RegisterPinkTeam {
+          Background: #974f6e;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "PI";
+        }
+
+        Button #RegisterWhiteTeam {
+          Background: #e1e1e1;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "W";
+        }
+
+        Button #RegisterBlackTeam {
+          Background: #141414;
+          Anchor: (Width: 50, Height: 50, Right: 10);
+          Padding: (Full: 0);
+          //        Text: "K";
+        }
       }
     }
   }

@@ -3,72 +3,138 @@
 
 $C = "../Common.ui";
 Group {
-  LayoutMode: Top;
-  Background: #141c26(0.98);
-  Anchor: (Width: 800, Height:500);
-  Padding: (Full: 20);
-  Label #Title {
-    Padding: (Full: 0);
-    Text: "Select a team to register.";
-    Style: (TextColor: #ffffff, HorizontalAlignment: Center, FontSize: 30, RenderBold: true);
-  }
+  LayoutMode: Left;
+  Anchor: (Width: 800, Height:600);
 
-  Group {Anchor: (Height: 40);}
 
-  Group {
-    LayoutMode: Center;
-    Background: #141c26(0.98);
+  Group #LeftPanel {
+    LayoutMode:Top;
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
     Label {
-      Text: "Specify where this team's spawn will be";
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
+    }
+
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Welcome";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "End";
+    }
+  }
+
+  Group #RightPanel {
+    FlexWeight:1;
+    Background: #141c26(0.98);
+    LayoutMode:Top;
+    Padding: (Full:20);
+
+    Label {
+      Anchor: (Height: 40);
+      Text: "Team Spawn Location";
+      Style: (TextColor: #ffffff, HorizontalAlignment: Center, FontSize: 30, RenderBold: true);
+    }
+
+    Group {Anchor: (Height:8);}
+
+    Group {
+      Anchor: (Height:3);
+      Background: #2b3542;
+    }
+
+    Group { Anchor: (Height: 40);}
+
+    Group {
+      LayoutMode: Center;
+      Label {
+        Text: "Specify where this team's spawn will be";
+        Style: (TextColor: #ffffff, HorizontalAlignment: Center, FontSize: 14, RenderBold: true);
+      }
+    }
+
+    Group {
+      LayoutMode: Top;
+      Group {
+        Anchor: (Width: 400, Height: 50);
+        $C.@TextField #InputX {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "X coordinate for team spawn";
+        }
+      }
+      Group {
+        Anchor: (Width: 400, Height: 50);
+
+        $C.@TextField #InputY {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "Y coordinate for team spawn";
+        }
+      }
+      Group {
+        Anchor: (Width: 400, Height: 50);
+
+        $C.@TextField #InputZ {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "Z coordinate for team spawn";
+        }
+      }
+
+      Group {
+        Anchor: (Width: 200);
+        $C.@TextButton #Save {
+          @Text = "SAVE";
+        }
+      }
+    }
+
+    Group { FlexWeight: 1;}
+
+    Group #Buttons {
+      FlexWeight: 1;
+      LayoutMode: Center;
+      $C.@CancelTextButton #ButtonsCancel {
+        @Text = "CANCEL";
+      }
+      Group {Anchor: (Width: 50);}
+      $C.@TextButton #ButtonsNext {
+        @Text = "NEXT";
+      }
     }
   }
 
 
-  Group {
-    LayoutMode: Top;
-    Group {
-      Anchor: (Width: 400, Height: 50);
-      $C.@TextField #InputX {
-        Style: (TextColor: #ffffff);
-        PlaceholderText: "X coordinate for team spawn";
-      }
-    }
-    Group {
-      Anchor: (Width: 400, Height: 50);
-
-      $C.@TextField #InputY {
-        Style: (TextColor: #ffffff);
-        PlaceholderText: "Y coordinate for team spawn";
-      }
-    }
-    Group {
-      Anchor: (Width: 400, Height: 50);
-
-      $C.@TextField #InputZ {
-        Style: (TextColor: #ffffff);
-        PlaceholderText: "Z coordinate for team spawn";
-      }
-    }
-
-    Group {
-      Anchor: (Width: 200);
-      $C.@TextButton #Save {
-        @Text = "SAVE";
-      }
-    }
-  }
-
-  Group { FlexWeight: 1;}
-
-  Group #Buttons {
-    FlexWeight: 1;
-    LayoutMode: Center;
-    $C.@CancelTextButton #ButtonsCancel {
-      @Text = "CANCEL";
-    }
-    Group {Anchor: (Width: 50);}
-    $C.@TextButton #ButtonsNext {
-      @Text = "NEXT";
-    }
-  }
 }

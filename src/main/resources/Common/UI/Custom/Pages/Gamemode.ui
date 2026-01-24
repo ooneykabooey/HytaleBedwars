@@ -6,34 +6,100 @@ $C ="../Common.ui";
 
 
 
-Group #Main {
-  LayoutMode: Top;
-  Background: #141c26(0.98);
-  Anchor: (Width: 800, Height: 500);
-  Label #Title {
-    Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
-    Anchor: (Height: 40);
-    Text: "What team mode will this map account for?";
-  }
-  Group { Anchor: (Height: 200); }
-  Group {
+Group {
+  Anchor: (Width: 800, Height: 600);
+  LayoutMode: Left;
+
+
+  Group #LeftPanel {
     LayoutMode: Top;
-    $C.@DropdownBox #TeamDropdown {
-      Anchor: (Width: 200, Height: 50);
-      Style: (@DefaultDropdownBoxStyle);
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
+    Label {
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
     }
-  }
-  Group { FlexWeight: 3;}
-  Group #Buttons {
-    FlexWeight: 1;
-    LayoutMode: Center;
-    $C.@CancelTextButton #ButtonsCancel {
-      @Text = "CANCEL";
+
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaa6e, FontSize: 18);
+      Text: "Welcome";
     }
-    Group {Anchor: (Width: 60);}
-    $C.@TextButton #ButtonsNext {
-      @Text = "NEXT";
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "End";
     }
   }
 
+    Group #RightPanel {
+      FlexWeight: 1;
+      Background: #141c26(0.98);
+      LayoutMode:Top;
+      Padding: (Full:20);
+
+      Label #Title {
+        Style: (TextColor: #ffffff, FontSize: 22, RenderBold: true, Alignment: Center);
+        Anchor: (Height: 40);
+        Text: "What team mode will this map account for?";
+      }
+
+      Group {Anchor: (Height:8);}
+
+      Group {
+        Anchor: (Height:3);
+        Background: #2b3542;
+      }
+
+      Group { Anchor: (Height: 200); }
+      Group {
+        LayoutMode: Top;
+        $C.@DropdownBox #TeamDropdown {
+          Anchor: (Width: 200, Height: 50);
+          Style: (@DefaultDropdownBoxStyle);
+        }
+      }
+      Group { FlexWeight: 3;}
+      Group #Buttons {
+        FlexWeight: 1;
+        LayoutMode: Center;
+        $C.@CancelTextButton #ButtonsCancel {
+          @Text = "CANCEL";
+        }
+        Group {Anchor: (Width: 60);}
+        $C.@TextButton #ButtonsNext {
+          @Text = "NEXT";
+        }
+      }
+    }
 }

@@ -71,7 +71,7 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlock
             Vector3i targetBlock = damageBlockEvent.getTargetBlock();
 //            Vector3d blockPos = targetBlock.toVector3d();
 
-            if (!(player.getGameMode() == GameMode.Creative) && !(blocksPlaced.contains(targetBlock))) {
+            if (!(player.getGameMode() == GameMode.Creative) && !(blocksPlaced.contains(targetBlock)) && !(damageBlockEvent.getBlockType().getId().equals("Furniture_Crude_Bed"))) {
                 damageBlockEvent.setCancelled(true);
                 BedwarsMessenger.notAllowedToBreakMapMessage(player);
             }
