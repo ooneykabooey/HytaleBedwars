@@ -11,36 +11,86 @@
 // Import Common ui for the TextField
 $C ="../Common.ui";
 
-Group #Main {
-    LayoutMode: Top;
-    Background: #2a2a2a;
-    Anchor: (Width: 800, Height: 800);
-    Label #Title {
-      Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
-      Anchor: (Height: 40);
-      Text: "Welcome!";
+Group {
+  Anchor: (Width: 800, Height: 600);
+  LayoutMode: Left;
+
+  Group #LeftPanel {
+    LayoutMode:Top;
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
+    Label {
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
     }
 
-    Group {
-      LayoutMode: Top;
-      Background: #2a2a2a;
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> Welcome";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "End";
+    }
+  }
+
+    Group #RightPanel {
       FlexWeight: 1;
+      Background: #141c26(0.98);
+      LayoutMode:Top;
+      Padding: (Full:20);
+      
       Label {
-      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
-      Text: "This UI is designed for builders to make their bedwars map into a functional game, with team
-spawns, resource locations, etc.";
+        Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
+        Anchor: (Height: 40);
+        Text: "Welcome!";
       }
-      Group {Anchor: (Height: 16);}
-      Label {
-        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
-        Text: "There are a set of conditions to meet before deploying, this UI will make it easy to
-register those conditions so the map can be deployed.";
+
+      Group {Anchor: (Height:8);}
+
+      Group {
+        Anchor: (Height:3);
+        Background: #2b3542;
       }
-      Group {Anchor: (Height: 16);}
+
+      Group {Anchor: (Height:35);}
+
       Label {
-        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
-        Text: "We heavily recommend having a list of all of the different coordinates of the following
-before starting, you will have to re-do the registry if anything is invalid:
+        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+        Text: "Before you register, make sure that you have
+         the following written down to register:
 
 - Queue spawn location
 - All team spawn locations
@@ -50,25 +100,33 @@ before starting, you will have to re-do the registry if anything is invalid:
 - 4 (Diamond) resource locations
 - 2 (Emerald) resource locations";
         }
-      }
-  Group {
-    Anchor: (Height: 32);
-    LayoutMode: Center;
-    Label {
-      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true);
-      Text: "Your map looks great! Ready to start? Click the BEGIN button to start";
-    }
-  }
 
-  Group #WelcomeButtons {
-    LayoutMode: Center;
-    $C.@CancelTextButton #WelcomeButtonsCancel {
-      @Text = "CANCEL";
+      Group {Anchor: (Height:80);}
+
+      Label {
+        Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+        Text: "Your map looks great! Ready to start?
+         Click the BEGIN button to start";
+      }
+
+      Group {
+        Anchor: (Height: 192);
+        LayoutMode: Center;
+
+        Group #WelcomeButtons {
+          LayoutMode: Center;
+
+          $C.@CancelTextButton #WelcomeButtonsCancel {
+            @Text = "CANCEL";
+          }
+
+          Group {Anchor: (Width: 60);}
+
+          $C.@TextButton #WelcomeButtonsBegin {
+            @Text = "BEGIN";
+          }
+        }
+      }
     }
-    Group {Anchor: (Width: 60);}
-    $C.@TextButton #WelcomeButtonsBegin {
-      @Text = "BEGIN";
-    }
-  }
 }
 

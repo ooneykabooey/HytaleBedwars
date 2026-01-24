@@ -4,7 +4,7 @@
 $C = "../Common.ui";
 Group {
   LayoutMode: Top;
-  Background: #2a2a2a;
+  Background: #141c26(0.98);
   Anchor: (Width: 800, Height:500);
   Padding: (Full: 20);
   Label #Label89bb42aa {
@@ -14,73 +14,71 @@ Group {
   }
   Group #Groupa6c682c3 {
     LayoutMode: Center;
-    Background: #333333;
-    Anchor: (Full: 0);
-    Padding: (Full: 0);
+    Background: #141c26(0);
+    Anchor: (Top: 200);
     Group #Group9a1d2f83 {
       LayoutMode: Center;
-      Background: #333333;
+      Background: #141c26(0);
       Padding: (Full: 0);
-      $C.@TextButton #RegisterYellowTeam {
-        Background: #d5a631;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        Text: "Y";
-      }
-      $C.@TextButton #RegisterWhiteTeam {
-        Background: #e1e1e1;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        Text: "W";
-      }
-      $C.@TextButton #RegisterRedTeam {
+      Button #RegisterRedTeam {
         Background: #79342b;
         Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "R";
+        //        Text: "R";
       }
-      $C.@TextButton #RegisterPurpleTeam {
-        Background: #471937;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        Text: "PU";
-      }
-      $C.@TextButton #RegisterPinkTeam {
-        Background: #974f6e;
-        Anchor: (Width: 50, Height: 50, Right: 10);
-        Padding: (Full: 0);
-        Text: "PI";
-      }
-      $C.@TextButton #RegisterOrangeTeam {
+      Button #RegisterOrangeTeam {
         Background: #91621e;
         Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "O";
+        //        Text: "O";
       }
-      $C.@TextButton #RegisterGreenTeam {
+      Button #RegisterYellowTeam {
+        Background: #d5a631;
+        Anchor: (Width: 50, Height: 50, Right: 10);
+        Padding: (Full: 0);
+//        Text: "Y";
+      }
+      Button #RegisterGreenTeam {
         Background: #317447;
         Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "G";
+        //        Text: "G";
       }
-      $C.@TextButton #RegisterCyanTeam {
+      Button #RegisterCyanTeam {
         Background: #377b7c;
         Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "C";
+        //        Text: "C";
       }
-      $C.@TextButton #RegisterBlueTeam {
+      Button #RegisterBlueTeam {
         Background: #26405d;
         Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "B";
+        //        Text: "B";
       }
-      $C.@TextButton #RegisterBlackTeam {
-        Background: #141414;
-        Anchor: (Width: 50, Height: 50, Left: 0, Right: 0, Top: 0);
+      Button #RegisterPurpleTeam {
+        Background: #471937;
+        Anchor: (Width: 50, Height: 50, Right: 10);
         Padding: (Full: 0);
-        Text: "K";
-        Disabled: false;
+        //        Text: "PU";
+      }
+      Button #RegisterPinkTeam {
+        Background: #974f6e;
+        Anchor: (Width: 50, Height: 50, Right: 10);
+        Padding: (Full: 0);
+        //        Text: "PI";
+      }
+      Button #RegisterWhiteTeam {
+        Background: #e1e1e1;
+        Anchor: (Width: 50, Height: 50, Right: 10);
+        Padding: (Full: 0);
+//        Text: "W";
+      }
+      Button #RegisterBlackTeam {
+        Background: #141414;
+        Anchor: (Width: 50, Height: 50, Right: 10);
+        Padding: (Full: 0);
+//        Text: "K";
       }
     }
   }

@@ -1,5 +1,6 @@
 package com.example.plugin;
 
+import com.example.plugin.TEST.Tutorial3Command;
 import com.example.plugin.commands.*;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.events.BlockBreakSystem;
@@ -58,8 +59,8 @@ public class Bedwars extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DeployCommand(this));
         this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
-        this.getCommandRegistry().registerCommand(new GamemodeUICommand());
-        this.getCommandRegistry().registerCommand(new QueueUICommand());
+        this.getCommandRegistry().registerCommand(new Tutorial3Command());
+
 
 
 //        resourceTimer.start();

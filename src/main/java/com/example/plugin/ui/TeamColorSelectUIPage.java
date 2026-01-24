@@ -2,6 +2,7 @@ package com.example.plugin.ui;
 
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsTeam;
+import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -30,14 +31,14 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
     private BedwarsTeam thisTeam;
 
     public static class TeamSelectedData {
-        public String button;
+        public String teamColor;
 
         public static final BuilderCodec<TeamSelectedData> CODEC  =
                 BuilderCodec.builder(TeamSelectedData.class, TeamSelectedData::new)
                         .addField(
-                                new KeyedCodec<>("Button", Codec.STRING),
-                                (obj, val) -> obj.button = val,
-                                obj -> obj.button
+                                new KeyedCodec<>("TeamColor", Codec.STRING),
+                                (obj, val) -> obj.teamColor = val,
+                                obj -> obj.teamColor
                         )
                         .build();
     }
@@ -52,16 +53,16 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
 
         cmd.append("Pages/TeamColorSelect.ui");
 
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterBlackTeam", EventData.of("Button", "K"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterBlueTeam", EventData.of("Button", "B"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterCyanTeam", EventData.of("Button", "C"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterGreenTeam", EventData.of("Button", "G"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterOrangeTeam", EventData.of("Button", "O"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterPinkTeam", EventData.of("Button", "PI"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterPurpleTeam", EventData.of("Button", "PU"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterRedTeam", EventData.of("Button", "R"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterWhiteTeam", EventData.of("Button", "W"), false);
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterYellowTeam", EventData.of("Button", "Y"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterBlackTeam", EventData.of("TeamColor", "BLACK"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterBlueTeam", EventData.of("TeamColor", "BLUE"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterCyanTeam", EventData.of("TeamColor", "CYAN"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterGreenTeam", EventData.of("TeamColor", "GREEN"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterOrangeTeam", EventData.of("TeamColor", "ORANGE"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterPinkTeam", EventData.of("TeamColor", "PINK"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterPurpleTeam", EventData.of("TeamColor", "PURPLE"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterRedTeam", EventData.of("TeamColor", "RED"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterWhiteTeam", EventData.of("TeamColor", "WHITE"), false);
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RegisterYellowTeam", EventData.of("TeamColor", "YELLOW"), false);
     }
 
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull TeamColorSelectUIPage.TeamSelectedData data) {
@@ -69,41 +70,22 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
 
-        if (data.button == null) return;
+        if (data.teamColor == null) return;
 
-            switch (data.button) {
-
-                /// There's probably a way to loop through the TeamColor enum's values, and see if the button's ID matches the teamcolor, then creates a bedwarsteam with that color's ID.
-                case "K" ->{
-                    thisTeam = new BedwarsTeam("Black", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "B" ->{
-                    thisTeam = new BedwarsTeam("Blue", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "C" ->{
-                    thisTeam = new BedwarsTeam("Cyan", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "G" ->{
-                    thisTeam = new BedwarsTeam("Green", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "O" ->{
-                    thisTeam = new BedwarsTeam("Orange", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "PI" ->{
-                    thisTeam = new BedwarsTeam("Pink", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "PU" ->{
-                    thisTeam = new BedwarsTeam("Purple", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "R" ->{
-                    thisTeam = new BedwarsTeam("Red", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "W" ->{
-                    thisTeam = new BedwarsTeam("White", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
-                case "Y" ->{
-                    thisTeam = new BedwarsTeam("Yellow", new Vector3d(), new Vector3d());
-                    player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));                }
+        TeamColor color;
+        try {
+            color = TeamColor.valueOf(data.teamColor);
+        } catch(IllegalArgumentException e) {
+            return;
         }
+
+        thisTeam = new BedwarsTeam(
+                color.getDisplayName(),
+                new Vector3d(),
+                new Vector3d()
+        );
+
+        player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));
+
     }
 }

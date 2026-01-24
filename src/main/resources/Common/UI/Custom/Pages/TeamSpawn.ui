@@ -4,7 +4,7 @@
 $C = "../Common.ui";
 Group {
   LayoutMode: Top;
-  Background: #2a2a2a;
+  Background: #141c26(0.98);
   Anchor: (Width: 800, Height:500);
   Padding: (Full: 20);
   Label #Title {
@@ -17,7 +17,7 @@ Group {
 
   Group {
     LayoutMode: Center;
-    Background: #2a2a2a;
+    Background: #141c26(0.98);
     Label {
       Text: "Specify where this team's spawn will be";
     }
