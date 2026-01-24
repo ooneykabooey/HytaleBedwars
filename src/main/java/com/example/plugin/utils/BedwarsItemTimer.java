@@ -28,13 +28,15 @@ public class BedwarsItemTimer {
     private String ID; // ID of the type of spawner.
     private DropEntry dropEntry; // DropEntry for getting the item it drops and amount.
     private EntityStore store; // EntityStore gathered from event, used to reference player and position.
+    private Vector3d location;
 
-    public BedwarsItemTimer(String ID, int seconds, DropEntry dropEntry)  {
+    public BedwarsItemTimer(String ID, int seconds, DropEntry dropEntry, Vector3d location)  {
         this.ID = ID;
         this.start = seconds;
         this.current = seconds;
         this.dropEntry = dropEntry;
         this.store = store;
+        this.location = location;
     }
 
     /** tick the timer by one unit. Drop the item once completed.

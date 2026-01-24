@@ -1,6 +1,8 @@
 package com.example.plugin.events;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.managers.BedwarsTeamsManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -15,6 +17,7 @@ import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -28,29 +31,36 @@ import java.util.Set;
 
 /// @author ooney
 
-// When player DAMAGES block...
-public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlockEvent> {
+public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockEvent> {
 
     Bedwars plugin;
     public static Set<Vector3i> blocksPlaced = new HashSet<>();
     BedwarsItemTimerManager timerManager;
+    BedwarsMap thisMap;
 
     public BlockBreakSystem(Bedwars plugin) {
-        super(DamageBlockEvent.class);
+        super(BreakBlockEvent.class);
         this.plugin = plugin;
         this.timerManager = plugin.getResourceTimer();
     }
 
     @Override
-    public void handle(int i, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer, @Nonnull DamageBlockEvent damageBlockEvent) {
+    public void handle(int i, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer, @Nonnull BreakBlockEvent damageBlockEvent) {
 
-        // TODO: Check if the block that is broken is a bed.
         if (damageBlockEvent.getBlockType() != BlockType.EMPTY) {
+
+
 
             Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
 
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player == null) return;
+
+            if (thisMap == null) {
+                thisMap = Bedwars.getMapFromMaps(player.getWorld());
+            }
+
+
             BedwarsMessenger.playerDamagedBlockMessage(player);
 
             // Start ticking if debug mode is on.
@@ -76,6 +86,11 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, DamageBlock
                 BedwarsMessenger.notAllowedToBreakMapMessage(player);
             }
 
+            if (damageBlockEvent.getBlockType().getId().equals("Furniture_Crude_Bed")) {
+                if (thisMap != null) {
+                    thisMap.updateMap(damageBlockEvent.getTargetBlock());
+                }
+            }
         }
     }
 

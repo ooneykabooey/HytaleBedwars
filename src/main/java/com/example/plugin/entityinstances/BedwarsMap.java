@@ -4,6 +4,7 @@ import com.example.plugin.managers.BedwarsTeamsManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.NoSuchElementException;
 ///  @author ooney
 public class BedwarsMap {
 
-
+    private boolean active;
     private World world;
     private Vector3d queueSpawn;
     private ArrayList<BedwarsMidResource> midResources; // Resources at mid (Diamond, Emerald)
@@ -156,6 +157,36 @@ public class BedwarsMap {
 
     public void setQueueSpawn(Vector3d queueSpawn) {
         this.queueSpawn = queueSpawn;
+    }
+
+    /** UPDATE MAP
+     *
+     *
+     *
+     *
+     */
+    public void updateMap(Vector3i anyBlockBroken) {
+        this.teamsManager.updateTeams(anyBlockBroken);
+    }
+
+    /// SET/GET TEAM MANAGER
+
+    public BedwarsTeamsManager getTeamsManager() {
+        return teamsManager;
+    }
+
+    public void setTeamsManager(BedwarsTeamsManager teamsManager) {
+        this.teamsManager = teamsManager;
+    }
+
+    /// SET/GET ACTIVITY
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }

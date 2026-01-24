@@ -1,5 +1,5 @@
 // Welcome UI
-// @author yasha
+// @author yasha, ooney
 // Defining Styles
 @CloseButtonStyle = TextButtonStyle(
   Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),

@@ -2,6 +2,7 @@ package com.example.plugin.entityinstances;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.HashSet;
@@ -18,14 +19,16 @@ public class BedwarsTeam {
     private Vector3d spawnLocation;
     private boolean bedAlive = true;
     private Vector3d forgeLocation;
+    private Vector3d bedLocation;
 
     // ECS-entity references instead of UUIDs
     private final Set<Ref<EntityStore>> players = new HashSet<>();
 
-    public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation) {
+    public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation, Vector3d bedLocation) {
         this.id = id;
         this.spawnLocation = spawnLocation;
         this.forgeLocation = forgeLocation;
+        this.bedLocation = bedLocation;
     }
 
     public String getId() {
@@ -88,6 +91,30 @@ public class BedwarsTeam {
     public void setForgeLocation(Vector3d vector) {
         this.forgeLocation = vector;
     }
+
+    // BED SETTER/GETTER
+
+    public Vector3d getBedLocation() {
+        return bedLocation;
+    }
+
+    public void setBedLocation(Vector3d bedLocation) {
+        this.bedLocation = bedLocation;
+    }
+
+
+    /// UPDATE TEAM
+
+    public void updateTeam(Vector3i anyBlockBroken) {
+
+        ///  If the anyBlockBroken value from the parameter matches the bedLocation, turn off respawning.
+        if (anyBlockBroken != null && anyBlockBroken.toVector3d().equals(this.bedLocation)) {
+            this.bedAlive = false;
+            // TODO: Notify Team Members.
+        }
+
+    }
+
 
 
 }

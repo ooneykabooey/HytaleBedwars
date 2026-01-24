@@ -82,6 +82,7 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
         thisTeam = new BedwarsTeam(
                 color.getDisplayName(),
                 new Vector3d(),
+                new Vector3d(),
                 new Vector3d()
         );
 

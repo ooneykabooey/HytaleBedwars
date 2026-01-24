@@ -1,5 +1,5 @@
 // Set queue location UI
-// @author yasha, ooney
+// @author ooney
 
 // Import Common ui for the TextField
 $C ="../Common.ui";
@@ -38,14 +38,14 @@ Group {
 
     Label {
       Anchor: (Height: 50);
-      Style: (TextColor: #d86262, FontSize: 18);
-      Text: "> Queue Location";
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Queue Location";
     }
 
     Label {
       Anchor: (Height: 50);
-      Style: (TextColor: #6e7da1, FontSize: 18);
-      Text: "Teams";
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> Teams";
     }
 
     Label {
@@ -71,7 +71,7 @@ Group {
     Label {
       Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
       Anchor: (Height: 40);
-      Text: "Queue";
+      Text: "Team Bed Location";
     }
 
     Group {Anchor: (Height:8);}
@@ -88,20 +88,20 @@ Group {
       Label {
         Style: (TextColor: #ffffff, FontSize: 16, RenderBold: true, Alignment: Center);
         Anchor: (Height: 40);
-        Text: "Where will players spawn before the game?";
+        Text: "Where is the bed at this team's base?";
       }
       Group {
         Anchor: (Width: 400, Height: 50);
         $C.@TextField #InputX {
           Style: (TextColor: #ffffff);
-          PlaceholderText: "X coordinate for queue spawn";
+          PlaceholderText: "X coordinate for team's bed";
         }
       }
       Group {
         Anchor: (Width: 400, Height: 50);
         $C.@TextField #InputY {
           Style: (TextColor: #ffffff);
-          PlaceholderText: "Y coordinate for queue spawn";
+          PlaceholderText: "Y coordinate for team's bed";
         }
       }
       Group {
@@ -109,7 +109,7 @@ Group {
 
         $C.@TextField #InputZ {
           Style: (TextColor: #ffffff);
-          PlaceholderText: "Z coordinate for queue spawn";
+          PlaceholderText: "Z coordinate for team's bed";
         }
       }
 

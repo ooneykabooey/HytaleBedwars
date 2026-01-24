@@ -72,6 +72,7 @@ public class WelcomeUIPage extends InteractiveCustomUIPage<WelcomeUIPage.Welcome
 
             case "Cancel" -> {
                 player.getPageManager().setPage(ref, store, Page.None);
+                thisMap = null;
             }
 
             case "Begin" -> {

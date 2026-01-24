@@ -40,16 +40,11 @@ public class BedwarsItemTimerManager {
 
     // List of items to spawn with their respective rates.
     private final List<BedwarsItemTimer> times = List.of(
-            new BedwarsItemTimer("LIFE",1, new BedwarsItemTimer.DropEntry("Ingredient_Life_Essence", 1)), // Life
-            new BedwarsItemTimer("ICE",8, new BedwarsItemTimer.DropEntry("Ingredient_Ice_Essence", 1)), // Ice
-            new BedwarsItemTimer("FIRE",45,new BedwarsItemTimer.DropEntry("Ingredient_Fire_Essence", 1)), // Fire
-            new BedwarsItemTimer("VOID",60,new BedwarsItemTimer.DropEntry("Ingredient_Void_Essence", 1)) // Void
+//            new BedwarsItemTimer("LIFE",1, new BedwarsItemTimer.DropEntry("Ingredient_Life_Essence", 1)), // Life
+//            new BedwarsItemTimer("ICE",8, new BedwarsItemTimer.DropEntry("Ingredient_Ice_Essence", 1)), // Ice
+//            new BedwarsItemTimer("FIRE",45,new BedwarsItemTimer.DropEntry("Ingredient_Fire_Essence", 1)), // Fire
+//            new BedwarsItemTimer("VOID",60,new BedwarsItemTimer.DropEntry("Ingredient_Void_Essence", 1)) // Void
     );
-
-    // This will be for spawning items for every team and every mid position.
-    private final List<List<BedwarsItemTimer>> timesoftimes = List.of();
-
-    private int count;
 
     /** Start the item spawning, activated upon blocks being damaged and only after the game has started.
             ticks every second, repeats forever until stopped.
@@ -79,4 +74,29 @@ public class BedwarsItemTimerManager {
     public boolean started() {
         return started;
     }
+
+    /// GETTER/SETTER TIMES
+
+    public BedwarsItemTimer getTimerFromTimer(BedwarsItemTimer timer) {
+        for (BedwarsItemTimer time : times) {
+            if (time.equals(timer)) {
+                return time;
+            }
+        }
+        return null;
+    }
+
+    public BedwarsItemTimer getTimerFromIndex(int i) {
+        return this.times.get(i);
+    }
+
+    public void setTimerAt(int i, BedwarsItemTimer timer) {
+        this.times.set(i, timer);
+    }
+
+    public void addTimer(BedwarsItemTimer timer) {
+        this.times.add(timer);
+    }
+
+
 }

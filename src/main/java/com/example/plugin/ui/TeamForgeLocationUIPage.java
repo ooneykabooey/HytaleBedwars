@@ -1,6 +1,7 @@
 package com.example.plugin.ui;
 
 import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
@@ -25,18 +26,19 @@ import javax.annotation.Nonnull;
 
 /// @author yasha
 
-public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> {
+public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLocationUIPage.ForgeData> {
 
     private BedwarsMap thisMap;
+    private BedwarsTeam thisTeam;
 
-    public static class QueueData {
+    public static class ForgeData {
         public String button;
         public String inputXText = "0";
         public String inputYText = "0";
         public String inputZText = "0";
 
-        public static final BuilderCodec<QueueData> CODEC =
-                BuilderCodec.builder(QueueData.class, QueueData::new)
+        public static final BuilderCodec<ForgeData> CODEC =
+                BuilderCodec.builder(ForgeData.class, ForgeData::new)
                         .addField(
                                 new KeyedCodec<>("@InputX", Codec.STRING),
                                 ( obj, val) -> obj.inputXText = val,
@@ -61,21 +63,22 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
 
     }
 
-    public QueueUIPage(PlayerRef playerRef, BedwarsMap map) {
-        super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, QueueData.CODEC);
+    public TeamForgeLocationUIPage(PlayerRef playerRef, BedwarsMap map, BedwarsTeam team) {
+        super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, ForgeData.CODEC);
         thisMap = map;
+        thisTeam = team;
     }
 
     @Override
     public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
 
-        cmd.append("Pages/Queue.ui");
+        cmd.append("Pages/TeamBedLocation.ui");
 
         // Binding "Submit" to send the data
         evt.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 "#Submit",
-                EventData.of("Button", "Coords")
+                EventData.of("Button", "Submit")
                         .append("@InputX", "#InputX.Value")
                         .append("@InputY", "#InputY.Value")
                         .append("@InputZ", "#InputZ.Value"),
@@ -98,16 +101,16 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
     }
 
     @Override
-    public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull QueueData data) {
+    public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull ForgeData data) {
 
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
 
-         if (data.button == null) return; // safety check
+        if (data.button == null) return; // safety check
 
         switch (data.button) {
 
-            case "Coords" -> {
+            case "Submit" -> {
                 try {
                     // Gather double values.
                     double x = data.inputXText != null && !data.inputXText.isEmpty() ? Double.parseDouble(data.inputXText) : 0;
@@ -115,10 +118,12 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
                     double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
 
                     // Message the player the coords they entered.
-                    BedwarsMessenger.coordinateEntry(player, x, y, z, "queue");
+                    BedwarsMessenger.coordinateEntry(player, x, y, z, "bed location of the " + thisTeam.getId() + " team");
 
-                    // Add the data to the BedwarsMap.
-                    thisMap.setQueueSpawn(new Vector3d(x, y, z));
+                    // Add the data to the BedwarsTeam.
+                    thisTeam.setForgeLocation(new Vector3d(x, y, z));
+                    // TODO: Somehow add a BedwarsItemTimer to the BedwarsItemTimerManager.
+                    // TODO: Maybe eliminate static lists of players and such and only attach it to BedwarsMap, just for thread safety.
 
                     // If the numbers aren't numbers.
                 } catch (NumberFormatException e) {
@@ -130,6 +135,7 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
             case "Cancel" -> {
                 player.getPageManager().setPage(ref, store, Page.None);
                 thisMap = null;
+                thisTeam = null;
             }
 
             case "Next" -> {
@@ -138,6 +144,5 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
 
 
         }
-
     }
 }

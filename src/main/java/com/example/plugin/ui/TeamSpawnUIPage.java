@@ -152,6 +152,8 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
 
                 case "Cancel" -> {
                     player.getPageManager().setPage(ref, store, Page.None);
+                    thisMap = null;
+                    thisTeam = null;
                 }
 
 
@@ -191,7 +193,7 @@ public class TeamSpawnUIPage extends InteractiveCustomUIPage<TeamSpawnUIPage.Tea
                     }
                 } case "Next" -> {
                     // Plug in the next UI page here
-                    // player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));
+                    player.getPageManager().openCustomPage(ref, store, new TeamBedLocationUIPage(playerRef, thisMap, thisTeam));
                     // TODO: When registering the team completes, add it to the BedwarsTeamManager's list, and take the user back to the team color select if they still have teams to pick. (If the ArrayList is size x for which the gamemode allows--Solos/Duos: 8 teams, Trios/Squads: 4, SquadvSquad: 2).
                 }
             }

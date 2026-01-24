@@ -1,6 +1,7 @@
 package com.example.plugin.controllers;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
@@ -23,6 +24,7 @@ public class BedwarsInGameQueueController {
     private int secondsRemaining = startTime;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private Bedwars plugin;
+    private BedwarsMap thisMap;
 
     public BedwarsInGameQueueController(Bedwars plugin) {
         this.plugin = plugin;
@@ -37,9 +39,15 @@ public class BedwarsInGameQueueController {
      */
     public void addPlayer(Ref<EntityStore> ref, Player player) {
          // If game has started, render them dead or eliminated.
-            BedwarsMessenger.notEnoughPlayersMessage(player);
-            BedwarsPlayerManager.add(ref, player);
-            updateQueue();
+
+        // Set this BedwarsMap
+        if (thisMap == null) {
+            thisMap = Bedwars.getMapFromMaps(player.getWorld());
+        }
+
+        BedwarsMessenger.notEnoughPlayersMessage(player);
+        BedwarsPlayerManager.add(ref, player);
+        updateQueue();
         // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
     }
 
@@ -75,14 +83,24 @@ public class BedwarsInGameQueueController {
      */
     public void startOrCompleteCountdown(boolean complete) {
         if (complete) {
+
             stopCountdown();
+
             for (Ref<EntityStore> player : BedwarsPlayerManager.getIndexOfPlayers()) {
                 BedwarsMessenger.queueDoneTestMessage(BedwarsPlayerManager.get(player).getPlayer());
             }
+
+            // Set active if not active already.
+            if (thisMap != null && !thisMap.isActive()) {
+                thisMap.setActive(true);
+            } else {
+                throw new NullPointerException("Tried to set a null BedwarsMap as active. May be caused from the first player joined being in a null world.");
+            }
+
             // Call to send players to game, select teams, start ticking resources, make eligible for rejoin, etc.
             // TODO: Register the first map, then develop this.
             // start ticking resources...
-
+            return;
         }
         startCountdown();
     }

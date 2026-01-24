@@ -117,6 +117,7 @@ public class GamemodeUIPage extends InteractiveCustomUIPage<GamemodeUIPage.TeamS
 
             case "Cancel" -> {
                 player.getPageManager().setPage(ref, store, Page.None);
+                thisMap = null;
             }
 
             case "TeamDropdown" -> {

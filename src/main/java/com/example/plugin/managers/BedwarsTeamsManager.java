@@ -3,6 +3,7 @@ package com.example.plugin.managers;
 import com.example.plugin.entityinstances.BedwarsTeam;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.ArrayList;
@@ -44,6 +45,12 @@ public class BedwarsTeamsManager {
 
     public ArrayList<BedwarsTeam> getTeams() {
         return teams;
+    }
+
+    public void updateTeams(Vector3i anyBlockBroken) {
+        for (BedwarsTeam team : teams) {
+            team.updateTeam(anyBlockBroken);
+        }
     }
 
 }
