@@ -1,8 +1,10 @@
 <sub>Written by ooney, January 21, 2026, 3:00 PM CST.</sub>
 
-UNFINISHED.
+# THIS PROJECT IS UNFINISHED.
 
 #### Note: Intended for server owners.
+
+Contact @ooney on discord for further information/questions.
 
 # About "Hytale Bedwars"
 
