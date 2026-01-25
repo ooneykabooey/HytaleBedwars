@@ -2,6 +2,7 @@ package com.example.plugin.ui;
 
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsTeam;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -21,6 +22,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /// @author ooney
 
@@ -29,6 +31,7 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
 
     private BedwarsMap thisMap;
     private BedwarsTeam thisTeam;
+    private int numTeams;
 
     public static class TeamSelectedData {
         public String teamColor;
@@ -43,9 +46,18 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
                         .build();
     }
 
-    public TeamColorSelectUIPage(@Nonnull PlayerRef playerRef, BedwarsMap map) {
+    public TeamColorSelectUIPage(@Nonnull PlayerRef playerRef, BedwarsMap map, BedwarsTeam team) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, TeamSelectedData.CODEC);
         thisMap = map;
+        thisTeam = team;
+
+        numTeams = switch (thisMap.getGamemode()) {
+            case ONES -> 8;
+            case TWOS -> 8;
+            case THREES -> 4;
+            case FOURS ->  4;
+            case FOURAFOUR -> 2;
+        };
     }
 
     @Override
@@ -73,20 +85,41 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
         if (data.teamColor == null) return;
 
         TeamColor color;
+
         try {
             color = TeamColor.valueOf(data.teamColor);
         } catch(IllegalArgumentException e) {
             return;
         }
 
+        ArrayList<BedwarsTeam> teamsInTeamsManager = thisMap.getTeamsManager().getTeams();
+
+        if (teamsInTeamsManager.isEmpty()) {
+            nextHelper(color, player, ref, store);
+        }
+
+        if (teamsInTeamsManager.size() >= numTeams) {
+            BedwarsMessenger.maxTeamsInitialized(player);
+        }
+
+        for (BedwarsTeam team : teamsInTeamsManager) {
+            if (team.getId().equals(color.getDisplayName())) {
+                BedwarsMessenger.alreadyInitializedTeam(player, team.getId());
+            } else {
+                nextHelper(color, player, ref, store);
+            }
+        }
+    }
+
+    private void nextHelper(TeamColor color, Player player, Ref<EntityStore> ref, Store<EntityStore> store) {
         thisTeam = new BedwarsTeam(
                 color.getDisplayName(),
                 new Vector3d(),
                 new Vector3d(),
-                new Vector3d()
+                new Vector3d(),
+                thisMap
         );
-
         player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));
-
     }
+
 }

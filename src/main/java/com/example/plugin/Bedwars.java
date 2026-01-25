@@ -7,6 +7,7 @@ import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
+import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
@@ -32,7 +33,7 @@ public class Bedwars extends JavaPlugin {
 
     private boolean started = false;
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(this);
+    private BedwarsMapManager mapManager = new BedwarsMapManager(this);
     private BedwarsInGameQueueController queueController = new BedwarsInGameQueueController(this);
     private static final ArrayList<BedwarsMap> maps = new ArrayList<>();
 
@@ -84,10 +85,6 @@ public class Bedwars extends JavaPlugin {
 
     public boolean gameCommenced() {
         return started;
-    }
-
-    public BedwarsItemTimerManager getResourceTimer() {
-        return resourceTimer;
     }
 
     public static BedwarsMap getMapFromMaps(World world) {

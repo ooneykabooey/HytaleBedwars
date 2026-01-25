@@ -133,7 +133,7 @@ public class QueueUIPage extends InteractiveCustomUIPage<QueueUIPage.QueueData> 
             }
 
             case "Next" -> {
-                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
+                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap, null)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
             }
 
 

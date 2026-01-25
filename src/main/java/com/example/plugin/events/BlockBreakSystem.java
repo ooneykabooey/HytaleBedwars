@@ -35,13 +35,11 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockE
 
     Bedwars plugin;
     public static Set<Vector3i> blocksPlaced = new HashSet<>();
-    BedwarsItemTimerManager timerManager;
     BedwarsMap thisMap;
 
     public BlockBreakSystem(Bedwars plugin) {
         super(BreakBlockEvent.class);
         this.plugin = plugin;
-        this.timerManager = plugin.getResourceTimer();
     }
 
     @Override
@@ -63,12 +61,6 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockE
 
             BedwarsMessenger.playerDamagedBlockMessage(player);
 
-            // Start ticking if debug mode is on.
-            if (plugin.debugMode()) {
-                if (!timerManager.started()) {
-                    timerManager.start(store, player);
-                }
-            }
 
             World world = player.getWorld();
             if (world == null) return;

@@ -1,27 +1,32 @@
 package com.example.plugin.entityinstances;
 
+import com.example.plugin.Bedwars;
+import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.managers.BedwarsTeamsManager;
+import com.example.plugin.utils.BedwarsItemTimer;
+import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 
 ///  @author ooney
 public class BedwarsMap {
 
+    private Bedwars plugin;
     private boolean active;
     private World world;
     private Vector3d queueSpawn;
     private ArrayList<BedwarsMidResource> midResources; // Resources at mid (Diamond, Emerald)
-    private BedwarsTeamsManager teamsManager;
     private GAMEMODE gamemode;
+    private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(plugin);
+    private BedwarsPlayerManager playerManager = new BedwarsPlayerManager();
+    private BedwarsTeamsManager teamsManager = new BedwarsTeamsManager(playerManager);
+
 
     public static final Map<String, GAMEMODE> possibleGamemodes = Map.of(
             "Solos (1v1s)", GAMEMODE.ONES,
@@ -188,5 +193,38 @@ public class BedwarsMap {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public void setPlugin(Bedwars bedwars) {
+        this.plugin = bedwars;
+        this.resourceTimer.setPlugin(plugin);
+    }
+
+    public Bedwars getPlugin() {
+        return plugin;
+    }
+
+    public void addToResourceTimer(BedwarsItemTimer timer) {
+        resourceTimer.addTimer(timer);
+    }
+
+    public void addAllToResourceTimer(Collection<BedwarsItemTimer> timers) {
+        resourceTimer.addTimers(timers);
+    }
+
+    public BedwarsItemTimerManager getResourceTimer() {
+        return resourceTimer;
+    }
+
+
+    public void addTeam(BedwarsTeam team) {
+        this.teamsManager.addToTeam(team);
+    }
+
+    ///  PLAYER MANAGER
+
+    public BedwarsPlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
 
 }

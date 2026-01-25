@@ -25,6 +25,7 @@ public class BedwarsInGameQueueController {
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private Bedwars plugin;
     private BedwarsMap thisMap;
+    private BedwarsPlayerManager playerManager;
 
     public BedwarsInGameQueueController(Bedwars plugin) {
         this.plugin = plugin;
@@ -43,10 +44,11 @@ public class BedwarsInGameQueueController {
         // Set this BedwarsMap
         if (thisMap == null) {
             thisMap = Bedwars.getMapFromMaps(player.getWorld());
+            playerManager = thisMap.getPlayerManager();
         }
 
         BedwarsMessenger.notEnoughPlayersMessage(player);
-        BedwarsPlayerManager.add(ref, player);
+        playerManager.add(ref, player);
         updateQueue();
         // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
     }
@@ -58,8 +60,8 @@ public class BedwarsInGameQueueController {
      * @param ref
      */
     public void removePlayer(Ref<EntityStore> ref) {
-        BedwarsPlayer player = BedwarsPlayerManager.get(ref);
-        BedwarsPlayerManager.remove(ref);
+        BedwarsPlayer player = playerManager.get(ref);
+        playerManager.remove(ref);
         updateQueue();
     }
 
@@ -68,9 +70,9 @@ public class BedwarsInGameQueueController {
      */
     public void updateQueue() {
         // Start countdown once 3 or more players join.
-        if (BedwarsPlayerManager.getSize() >= 3) { // Start a countdown to the game.
+        if (playerManager.getSize() >= 1) { // Start a countdown to the game.
             startOrCompleteCountdown(false);
-        } else if (BedwarsPlayerManager.getSize() == 8) { // Force start the game
+        } else if (playerManager.getSize() == 8) { // Force start the game
             startOrCompleteCountdown(true);
         } else { // < 3 players ; stop and reset the countdown
             stopCountdown();
@@ -86,8 +88,8 @@ public class BedwarsInGameQueueController {
 
             stopCountdown();
 
-            for (Ref<EntityStore> player : BedwarsPlayerManager.getIndexOfPlayers()) {
-                BedwarsMessenger.queueDoneTestMessage(BedwarsPlayerManager.get(player).getPlayer());
+            for (Ref<EntityStore> player : playerManager.getIndexOfPlayers()) {
+                BedwarsMessenger.queueDoneTestMessage(playerManager.get(player).getPlayer());
             }
 
             // Set active if not active already.
@@ -100,6 +102,8 @@ public class BedwarsInGameQueueController {
             // Call to send players to game, select teams, start ticking resources, make eligible for rejoin, etc.
             // TODO: Register the first map, then develop this.
             // start ticking resources...
+            //thisMap.getResourceTimer().start();
+
             return;
         }
         startCountdown();
@@ -112,11 +116,11 @@ public class BedwarsInGameQueueController {
 
         secondsRemaining = startTime; // Reset to start time, assuming secondsRemaining will stay decremented after any potential reset.
 
-        BedwarsMessenger.queueTimeRemaining(secondsRemaining);
+        BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
         scheduler.scheduleAtFixedRate(() -> {
             if (secondsRemaining > 0) {
                 secondsRemaining--;
-                BedwarsMessenger.queueTimeRemaining(secondsRemaining);
+                BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
             } else {
                 // Entering game...
                 startOrCompleteCountdown(true);

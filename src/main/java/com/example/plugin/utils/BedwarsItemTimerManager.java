@@ -17,6 +17,8 @@ import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,12 +41,7 @@ public class BedwarsItemTimerManager {
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     // List of items to spawn with their respective rates.
-    private final List<BedwarsItemTimer> times = List.of(
-//            new BedwarsItemTimer("LIFE",1, new BedwarsItemTimer.DropEntry("Ingredient_Life_Essence", 1)), // Life
-//            new BedwarsItemTimer("ICE",8, new BedwarsItemTimer.DropEntry("Ingredient_Ice_Essence", 1)), // Ice
-//            new BedwarsItemTimer("FIRE",45,new BedwarsItemTimer.DropEntry("Ingredient_Fire_Essence", 1)), // Fire
-//            new BedwarsItemTimer("VOID",60,new BedwarsItemTimer.DropEntry("Ingredient_Void_Essence", 1)) // Void
-    );
+    private ArrayList<BedwarsItemTimer> times = new ArrayList<>();
 
     /** Start the item spawning, activated upon blocks being damaged and only after the game has started.
             ticks every second, repeats forever until stopped.
@@ -96,6 +93,18 @@ public class BedwarsItemTimerManager {
 
     public void addTimer(BedwarsItemTimer timer) {
         this.times.add(timer);
+    }
+
+    public void addTimers(Collection<BedwarsItemTimer> collection) {
+            times.addAll(collection);
+    }
+
+    public void setPlugin(Bedwars plugin) {
+        this.plugin = plugin;
+    }
+
+    public Bedwars getPlugin() {
+        return plugin;
     }
 
 

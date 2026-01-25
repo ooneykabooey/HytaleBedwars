@@ -137,7 +137,7 @@ public class TeamBedLocationUIPage extends InteractiveCustomUIPage<TeamBedLocati
             }
 
             case "Next" -> {
-                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
+                player.getPageManager().openCustomPage(ref, store, new TeamForgeLocationUIPage(playerRef, thisMap, thisTeam)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
             }
 
 

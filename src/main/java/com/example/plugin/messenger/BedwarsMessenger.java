@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
@@ -44,7 +45,7 @@ public class BedwarsMessenger {
         context.sendMessage(Message.raw("You do not have permission to execute this command!"));
     }
 
-    public static void queueTimeRemaining(int secondsRemaining) {
+    public static void queueTimeRemaining(int secondsRemaining, World world) {
         EventTitleUtil.showEventTitleToWorld(
                 Message.raw(secondsRemaining + " seconds.."),
                 Message.raw( "TIME UNTIL GAME STARTS"),
@@ -53,7 +54,7 @@ public class BedwarsMessenger {
                 1,
                 0,
                 0,
-                BedwarsPlayerManager.getPlayerFromIndex(0).getPlayer().getWorld().getEntityStore().getStore());
+                world.getEntityStore().getStore());
 
     }
 
@@ -83,6 +84,10 @@ public class BedwarsMessenger {
         //}
         ///  ^^ player.isFirstSpawn() only applies to the world, not the universe.
         ///  We don't want the message to repeat for every new map the user joins.
+    }
+
+    public static void promptUserToDeploy(Player player) {
+        player.sendMessage(Message.raw("Welcome, this world has not been registered as a bedwars map, do /deploy to do so!"));
     }
 
 
@@ -232,6 +237,14 @@ public class BedwarsMessenger {
         player.sendMessage(Message.raw(
                 "You entered the coordinates: " + x + ", " + y + " and " + z + " for the " + whatFor + "!"
         ));
+    }
+
+    public static void alreadyInitializedTeam(Player player, String ID) {
+        player.sendMessage(Message.raw("You have already initialized the " + ID + " team!"));
+    }
+
+    public static void maxTeamsInitialized(Player player) {
+        player.sendMessage(Message.raw("The limit of teams registered for this gamemode has been reached!"));
     }
 
 }

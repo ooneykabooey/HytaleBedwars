@@ -20,8 +20,8 @@ import java.util.Map;
 public class BedwarsPlayerManager {
 
     // Ref<EntityStore> is the entity identity in ECS
-    private static final Map<Ref<EntityStore>, BedwarsPlayer> players = new HashMap<>();
-    private static final ArrayList<Ref<EntityStore>> indexOfPlayers = new ArrayList<>();
+    private Map<Ref<EntityStore>, BedwarsPlayer> players = new HashMap<>();
+    private ArrayList<Ref<EntityStore>> indexOfPlayers = new ArrayList<>();
 
     /**
      * Add a player to the manager.
@@ -29,7 +29,7 @@ public class BedwarsPlayerManager {
      * @param ref    the player's entity reference
      * @param player the Player object
      */
-    public static void add(Ref<EntityStore> ref, Player player) {
+    public void add(Ref<EntityStore> ref, Player player) {
         players.put(ref, new BedwarsPlayer(ref, player));
         indexOfPlayers.add(ref);
     }
@@ -39,7 +39,7 @@ public class BedwarsPlayerManager {
      *
      * @param ref the player's entity reference
      */
-    public static void remove(Ref<EntityStore> ref) {
+    public void remove(Ref<EntityStore> ref) {
         players.remove(ref);
         indexOfPlayers.remove(ref);
     }
@@ -50,38 +50,38 @@ public class BedwarsPlayerManager {
      * @param ref the player's entity reference
      * @return the BedwarsPlayer object, or null if not found
      */
-    public static BedwarsPlayer get(Ref<EntityStore> ref) {
+    public BedwarsPlayer get(Ref<EntityStore> ref) {
         return players.get(ref);
     }
 
     /**
      * Check if a player is registered.
      */
-    public static boolean contains(Ref<EntityStore> ref) {
+    public boolean contains(Ref<EntityStore> ref) {
         return players.containsKey(ref);
     }
 
     /**
      * Get all registered BedWars players.
      */
-    public static Collection<BedwarsPlayer> getAll() {
+    public Collection<BedwarsPlayer> getAll() {
         return players.values();
     }
 
     /**
      * @return Get amount of players in the list.
      */
-    public static int getSize() {return players.size();}
+    public int getSize() {return players.size();}
 
     /**
      * @return Get the indexOfPlayers arraylist.
      */
-    public static ArrayList<Ref<EntityStore>> getIndexOfPlayers() {return indexOfPlayers;}
+    public ArrayList<Ref<EntityStore>> getIndexOfPlayers() {return indexOfPlayers;}
 
     /** Get a player from an index of keys.
      *
      * @param i Index of the arraylist to search.
      * @return The player at that key.
      */
-    public static BedwarsPlayer getPlayerFromIndex(int i) {return players.get(indexOfPlayers.get(i));}
+    public BedwarsPlayer getPlayerFromIndex(int i) {return players.get(indexOfPlayers.get(i));}
 }

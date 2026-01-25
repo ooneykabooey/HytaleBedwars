@@ -22,6 +22,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 
 /// @author yasha
@@ -72,7 +73,7 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
     @Override
     public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
 
-        cmd.append("Pages/TeamBedLocation.ui");
+        cmd.append("Pages/TeamForgeLocation.ui");
 
         // Binding "Submit" to send the data
         evt.addEventBinding(
@@ -105,6 +106,7 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
 
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
+        ArrayList<BedwarsTeam> teamsInTeamsManager = thisMap.getTeamsManager().getTeams();
 
         if (data.button == null) return; // safety check
 
@@ -118,10 +120,10 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
                     double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
 
                     // Message the player the coords they entered.
-                    BedwarsMessenger.coordinateEntry(player, x, y, z, "bed location of the " + thisTeam.getId() + " team");
+                    BedwarsMessenger.coordinateEntry(player, x, y, z, "forge location of the " + thisTeam.getId() + " team");
 
                     // Add the data to the BedwarsTeam.
-                    thisTeam.setForgeLocation(new Vector3d(x, y, z));
+                    thisTeam.setForgeLocation(new Vector3d(x, y, z), player);
                     // TODO: Somehow add a BedwarsItemTimer to the BedwarsItemTimerManager.
                     // TODO: Maybe eliminate static lists of players and such and only attach it to BedwarsMap, just for thread safety.
 
@@ -139,7 +141,21 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
             }
 
             case "Next" -> {
-                player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap)); // TODO: MAKE SURE TO ADD TO THE NEW UI'S CONSTRUCTOR: BedwarsMap map, COPY OVER thisMap.
+                thisMap.addTeam(thisTeam);
+
+                int numTeams = switch (thisMap.getGamemode()) {
+                                                case ONES -> 8;
+                                                case TWOS -> 8;
+                                                case THREES -> 4;
+                                                case FOURS ->  4;
+                                                case FOURAFOUR -> 2;
+                                            };
+
+                if (teamsInTeamsManager.size() >= numTeams) {
+                    // Send to Mid resource locations
+                } else {
+                    player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap, thisTeam));
+                }
             }
 
 
