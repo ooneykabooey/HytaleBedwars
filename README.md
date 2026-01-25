@@ -1,6 +1,6 @@
 <sub>Written by ooney, January 21, 2026, 3:00 PM CST.</sub>
 
-# THIS PROJECT IS UNFINISHED.
+# THIS PROJECT IS A WORK IN PROGRESS.
 
 #### Note: Intended for server owners.
 
