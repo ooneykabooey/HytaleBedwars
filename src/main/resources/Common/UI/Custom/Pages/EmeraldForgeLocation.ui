@@ -1,0 +1,137 @@
+// Set queue location UI
+// @author ooney
+
+// Import Common ui for the TextField
+$C ="../Common.ui";
+
+
+
+Group {
+  LayoutMode: Left;
+  Anchor: (Width: 800, Height: 600);
+
+  Group #LeftPanel {
+    LayoutMode:Top;
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
+    Label {
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
+    }
+
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Welcome";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d8d862, FontSize: 18);
+      Text: "> Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6e7da1, FontSize: 18);
+      Text: "End";
+    }
+  }
+
+  Group #RightPanel {
+    FlexWeight:1;
+    Background: #141c26(0.98);
+    LayoutMode:Top;
+    Padding: (Full:20);
+
+
+    Label {
+      Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
+      Anchor: (Height: 40);
+      Text: "Team Forge Location";
+    }
+
+    Group {Anchor: (Height:8);}
+
+    Group {
+      Anchor: (Height:3);
+      Background: #2b3542;
+    }
+
+    Group { Anchor: (Height: 50);}
+
+    Group {
+      LayoutMode: Top;
+      Label {
+        Style: (TextColor: #ffffff, FontSize: 16, RenderBold: true, Alignment: Center);
+        Anchor: (Height: 40);
+        Text: "Where is this team's resource spawner located?";
+      }
+      Group {
+        Anchor: (Width: 400, Height: 50);
+        $C.@TextField #InputX {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "X coordinate for resource spawn";
+        }
+      }
+      Group {
+        Anchor: (Width: 400, Height: 50);
+        $C.@TextField #InputY {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "Y coordinate for resource spawn";
+        }
+      }
+      Group {
+        Anchor: (Width: 400, Height: 50);
+        $C.@TextField #InputZ {
+          Style: (TextColor: #ffffff);
+          PlaceholderText: "Z coordinate for resource spawn";
+        }
+      }
+
+      Group {
+        Anchor: (Width: 200);
+        $C.@TextButton #Submit {
+          @Text = "SUBMIT";
+        }
+      }
+    }
+
+    Group { FlexWeight: 1;}
+
+    Group #Buttons {
+      FlexWeight: 1;
+      LayoutMode: Center;
+      $C.@CancelTextButton #ButtonsCancel {
+        @Text = "CANCEL";
+      }
+      Group {Anchor: (Width: 60);}
+      $C.@TextButton #ButtonsNext {
+        @Text = "NEXT";
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@ package com.example.plugin.ui;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.messenger.BedwarsMessenger;
+import com.example.plugin.utils.BedwarsItemTimer;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -27,10 +28,12 @@ import java.util.ArrayList;
 
 /// @author yasha
 
-public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLocationUIPage.ForgeData> {
+public class EmeraldForgeLocationUIPage extends InteractiveCustomUIPage<EmeraldForgeLocationUIPage.ForgeData> {
 
     private BedwarsMap thisMap;
-    private BedwarsTeam thisTeam;
+    private int numEmeraldGens;
+    private Vector3d location;
+    private int count;
 
     public static class ForgeData {
         public String button;
@@ -64,16 +67,17 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
 
     }
 
-    public TeamForgeLocationUIPage(PlayerRef playerRef, BedwarsMap map, BedwarsTeam team) {
+    public EmeraldForgeLocationUIPage(PlayerRef playerRef, BedwarsMap map, int eg, int c) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, ForgeData.CODEC);
         thisMap = map;
-        thisTeam = team;
+        numEmeraldGens = eg;
+        count = c;
     }
 
     @Override
     public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
 
-        cmd.append("Pages/TeamForgeLocation.ui");
+        cmd.append("Pages/EmeraldForgeLocation.ui");
 
         // Binding "Submit" to send the data
         evt.addEventBinding(
@@ -106,7 +110,6 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
 
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
-        ArrayList<BedwarsTeam> teamsInTeamsManager = thisMap.getTeamsManager().getTeams();
 
         if (data.button == null) return; // safety check
 
@@ -120,12 +123,9 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
                     double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
 
                     // Message the player the coords they entered.
-                    BedwarsMessenger.coordinateEntry(player, x, y, z, "forge location of the " + thisTeam.getId() + " team");
+                    BedwarsMessenger.coordinateEntry(player, x, y, z, "location of one of the emerald forges");
 
-                    // Add the data to the BedwarsTeam.
-                    thisTeam.setForgeLocation(new Vector3d(x, y, z), player);
-                    // TODO: Somehow add a BedwarsItemTimer to the BedwarsItemTimerManager.
-                    // TODO: Maybe eliminate static lists of players and such and only attach it to BedwarsMap, just for thread safety.
+                    location = new Vector3d(x, y, z);
 
                     // If the numbers aren't numbers.
                 } catch (NumberFormatException e) {
@@ -137,26 +137,22 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
             case "Cancel" -> {
                 player.getPageManager().setPage(ref, store, Page.None);
                 thisMap = null;
-                thisTeam = null;
             }
 
             case "Next" -> {
-                thisMap.addTeam(thisTeam);
 
-                int numTeams = switch (thisMap.getGamemode()) {
-                                                case ONES -> 8;
-                                                case TWOS -> 8;
-                                                case THREES -> 4;
-                                                case FOURS ->  4;
-                                                case FOURAFOUR -> 2;
-                                            };
-
-                if (teamsInTeamsManager.size() >= numTeams) {
-                    player.getPageManager().openCustomPage(ref, store, new SelectNumberOfMidForgesUIPage(playerRef, thisMap));
+                thisMap.getResourceTimer().addTimer(new BedwarsItemTimer("EMERALD", 60, new BedwarsItemTimer.DropEntry("Rock_Gem_Emerald", 1), location, thisMap, null));
+                count++;
+                if (count >= numEmeraldGens) {
+                    // TODO: Make "END" Page.
+                    player.getPageManager().openCustomPage(ref, store, new EndUIPage(playerRef, thisMap));
                 } else {
-                    player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap, thisTeam));
+                    player.getPageManager().openCustomPage(ref, store, new EmeraldForgeLocationUIPage(playerRef, thisMap, numEmeraldGens, count));
                 }
+
             }
+
+
         }
     }
 }

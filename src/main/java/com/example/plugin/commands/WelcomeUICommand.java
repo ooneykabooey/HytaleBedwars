@@ -16,7 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 public class WelcomeUICommand extends AbstractPlayerCommand {
 
     public WelcomeUICommand() {
-        super("welcome", "Opens test UI", false);
+        super("deploy", "Opens the menu to register the world as a bedwars map.", false);
     }
 
     @Override

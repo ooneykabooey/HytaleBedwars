@@ -1,0 +1,120 @@
+// Welcome UI
+// @author yasha, ooney
+// Defining Styles
+@CloseButtonStyle = TextButtonStyle(
+  Default: (Background: #2b3542, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #3b4552, LabelStyle: (FontSize: 13, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #1b2532, LabelStyle: (FontSize: 13, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+
+// Import Common ui for the TextField
+$C ="../Common.ui";
+
+Group {
+  Anchor: (Width: 800, Height: 600);
+  LayoutMode: Left;
+
+  Group #LeftPanel {
+    LayoutMode:Top;
+    Anchor: (Width: 200);
+    Background: #0a1119(0.95);
+    Padding: (Full:22);
+
+    Label {
+      Anchor: (Height:25);
+      Style: (TextColor: #4a5568, FontSize: 11, RenderBold: false, LetterSpacing: 2);
+      Text: "BY OONEY AND YASHA";
+    }
+
+    Group {Anchor: (Height: 25);}
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Welcome";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Gamemode";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Queue Location";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Teams";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #6eaf6e, FontSize: 18);
+      Text: "Mid's Resources";
+    }
+
+    Label {
+      Anchor: (Height: 50);
+      Style: (TextColor: #d86262, FontSize: 18);
+      Text: "> End";
+    }
+  }
+
+  Group #RightPanel {
+    FlexWeight: 1;
+    Background: #141c26(0.98);
+    LayoutMode:Top;
+    Padding: (Full:20);
+
+    Label {
+      Style: (TextColor: #ffffff, FontSize: 30, RenderBold: true, Alignment: Center);
+      Anchor: (Height: 40);
+      Text: "You're Done!!";
+    }
+
+    Group {Anchor: (Height:8);}
+
+    Group {
+      Anchor: (Height:3);
+      Background: #2b3542;
+    }
+
+    Group {Anchor: (Height:35);}
+
+    Label {
+      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+      Text: "Amazing work! You have finished registering
+      your bedwars map. If you wish to activate it for
+      playability, follow this step:
+
+      Type in /activatemap into chat.";
+    }
+
+    Group {Anchor: (Height:80);}
+
+    Label {
+      Style: (TextColor: #ffffff, FontSize: 18, RenderBold: true, HorizontalAlignment: Center);
+      Text: "You are finished, feel free to close this.";
+    }
+
+    Group {
+      Anchor: (Height: 192);
+      LayoutMode: Center;
+
+      Group #WelcomeButtons {
+        LayoutMode: Center;
+
+        $C.@TextButton #WelcomeButtonsBegin {
+          @Text = "DONE";
+        }
+      }
+    }
+  }
+}
+

@@ -4,7 +4,6 @@ import com.example.plugin.Bedwars;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.entityinstances.BedwarsMap;
-import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.*;
@@ -31,7 +30,6 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
     public PlayerJoinLeaveSystem(Bedwars plugin) {
         this.plugin = plugin;
-        this.queueController = new BedwarsInGameQueueController(plugin);
     }
 
     /**
@@ -60,31 +58,36 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
 
         if (thisMap != null) {
-            if (!plugin.gameCommenced()) {
+            thisMap.getResourceTimer().setStore(store);
+            thisMap.getResourceTimer().setSamplePlayer(player);
+            if (thisMap.isActivated()) {
+                queueController = thisMap.getQueueController();
+                if (!thisMap.gameCommenced()) {
 
-                PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
-                queueController.addPlayer(ref, player);
-            } else {
-                if (thisMap.getPlayerManager().contains(ref)) {
-                    if (thisMap.getPlayerManager().get(ref).canRejoin()) {
-                        // Presume the player dead or eliminated.
-                    }
+                    PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
+                    queueController.addPlayer(ref, player);
                 } else {
-                    // player.getWorld().drainPlayersTo();
-                    // Send back to server lobby.
+                    if (thisMap.getPlayerManager().contains(ref)) {
+                        if (thisMap.getPlayerManager().get(ref).canRejoin()) {
+                            // Presume the player dead or eliminated.
+                        }
+                    } else {
+                        // player.getWorld().drainPlayersTo();
+                        // Send back to server lobby.
+                    }
                 }
+
+                // Execute if game is enqueued
+                // Update if queue should countdown/game start, notify world of player joins.
+
+                // Execute once game is commenced.
+                // Kick players who are not eligible for rejoin.
+                // Those eligible to rejoin are those that joined during queue and left during the game.
+
+                // Execute upon eligible rejoin
+                // Player will be killed or eliminated depending on the bed's state.
+
             }
-
-            // Execute if game is enqueued
-            // Update if queue should countdown/game start, notify world of player joins.
-
-            // Execute once game is commenced.
-            // Kick players who are not eligible for rejoin.
-            // Those eligible to rejoin are those that joined during queue and left during the game.
-
-            // Execute upon eligible rejoin
-            // Player will be killed or eliminated depending on the bed's state.
-
         } else {
             if (player.hasPermission("bedwars.op")) { // TODO: Add another check for if the world is a server lobby (Not until way later).
                 BedwarsMessenger.promptUserToDeploy(player);
@@ -107,9 +110,11 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
         assert player.getWorld() != null;
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
-
-        if (!plugin.gameCommenced() && thisMap != null) {
-            thisMap.getPlayerManager().remove(ref);
+        assert thisMap != null : "Failed to remove player from player manager, the BedwarsMap registered as null when the player left.";
+        if (thisMap.isActivated()) {
+             if (!thisMap.gameCommenced()) {
+                thisMap.getPlayerManager().remove(ref);
+            }
         }
 
         // Execute during game queue

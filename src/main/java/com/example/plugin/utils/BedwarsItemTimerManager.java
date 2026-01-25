@@ -1,12 +1,14 @@
 package com.example.plugin.utils;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
@@ -30,12 +32,13 @@ public class BedwarsItemTimerManager {
 
     // TODO: Get references to all of the players, and the coordinate vectors to all team resource positions (3.5 blocks from their spawnpoint).
 
-    private Bedwars plugin;
     private boolean started = false;
+    private BedwarsMap thisMap;
+    private Store<EntityStore> store;
+    private Player samplePlayer;
 
-
-    public BedwarsItemTimerManager(Bedwars plugin) {
-        this.plugin = plugin;
+    public BedwarsItemTimerManager(BedwarsMap map) {
+        thisMap = map;
     }
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -48,13 +51,18 @@ public class BedwarsItemTimerManager {
      */
     public void start(Store<EntityStore> store, Player player) {
         started = true;
-
-        BedwarsMessenger.notifyForgeTicking(player, store);
             scheduler.scheduleAtFixedRate(() -> {
                 for (BedwarsItemTimer timer : times) {
-                    if (plugin.gameCommenced() && started) {
-                        timer.tick(store, player);
+
+
+                    if (timer.getThisTeam() == null) { // if no team (probably a mid resource), still generate.
+                        timer.tick(store, player, timer.getLocation());
+                    } else if (!(timer.getThisTeam().getPlayers().isEmpty())) { // if the team is not empty, generate. TODO: Fix this.
+                        timer.tick(store, player, timer.getLocation());
                     }
+
+
+
                 }
             },0,1, TimeUnit.SECONDS);
 
@@ -99,12 +107,21 @@ public class BedwarsItemTimerManager {
             times.addAll(collection);
     }
 
-    public void setPlugin(Bedwars plugin) {
-        this.plugin = plugin;
+
+    public void setStore(Store<EntityStore> store) {
+        this.store = store;
     }
 
-    public Bedwars getPlugin() {
-        return plugin;
+    public Store<EntityStore> getStore() {
+        return store;
+    }
+
+    public void setSamplePlayer(Player player) {
+        this.samplePlayer = player;
+    }
+
+    public Player getSamplePlayer() {
+        return samplePlayer;
     }
 
 

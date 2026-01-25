@@ -7,7 +7,6 @@ import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
-import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
@@ -33,8 +32,6 @@ public class Bedwars extends JavaPlugin {
 
     private boolean started = false;
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private BedwarsMapManager mapManager = new BedwarsMapManager(this);
-    private BedwarsInGameQueueController queueController = new BedwarsInGameQueueController(this);
     private static final ArrayList<BedwarsMap> maps = new ArrayList<>();
 
 
@@ -62,15 +59,10 @@ public class Bedwars extends JavaPlugin {
         estorereg.registerSystem(new BlockPlaceSystem());
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
 
-        this.getCommandRegistry().registerCommand(new DeployCommand(this));
         this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
         this.getCommandRegistry().registerCommand(new Tutorial3Command());
-
-
-
-//        resourceTimer.start();
-
+        this.getCommandRegistry().registerCommand(new ActivateMapCommand());
     }
 
     // Helper method to register all commands inside the plugin, for readability's sake.
@@ -96,13 +88,9 @@ public class Bedwars extends JavaPlugin {
         return null;
     }
 
-
-    ///  DEPLOY ///
-
-    public static void deploy(GAMEMODE gamemode) {
-
+    public static void registerMap(BedwarsMap bedwarsMap) {
+        maps.add(bedwarsMap);
     }
-
 
 
 

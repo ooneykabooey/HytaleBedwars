@@ -129,8 +129,8 @@ public class BedwarsTeam {
     ///  INITIALIZE FORGES
 
     public void initializeTeamForges(Vector3d vector, Player player, BedwarsMap map) {
-        forges.add(new BedwarsItemTimer("GOLD", 8, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Gold", 1), vector));
-        forges.add(new BedwarsItemTimer("IRON", 1, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Iron", 1), vector));
+        forges.add(new BedwarsItemTimer("GOLD", 8, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Gold", 1), vector, thisMap, this));
+        forges.add(new BedwarsItemTimer("IRON", 1, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Iron", 1), vector, thisMap, this));
 
 
 
@@ -139,7 +139,4 @@ public class BedwarsTeam {
 
         map.addAllToResourceTimer(forges);
     }
-
-
-
 }

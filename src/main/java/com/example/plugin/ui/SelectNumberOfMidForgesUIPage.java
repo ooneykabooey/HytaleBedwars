@@ -27,16 +27,17 @@ import java.util.ArrayList;
 
 /// @author yasha
 
-public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLocationUIPage.ForgeData> {
+public class SelectNumberOfMidForgesUIPage extends InteractiveCustomUIPage<SelectNumberOfMidForgesUIPage.ForgeData> {
 
     private BedwarsMap thisMap;
-    private BedwarsTeam thisTeam;
+    private int numDiamondGens;
+    private int numEmeraldGens;
+
 
     public static class ForgeData {
         public String button;
         public String inputXText = "0";
         public String inputYText = "0";
-        public String inputZText = "0";
 
         public static final BuilderCodec<ForgeData> CODEC =
                 BuilderCodec.builder(ForgeData.class, ForgeData::new)
@@ -51,11 +52,6 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
                                 obj -> obj.inputYText
                         )
                         .addField(
-                                new KeyedCodec<>("@InputZ", Codec.STRING),
-                                (obj, val) -> obj.inputZText = val,
-                                obj -> obj.inputZText
-                        )
-                        .addField(
                                 new KeyedCodec<>("Button", Codec.STRING),
                                 (obj, val) -> obj.button = val,
                                 obj -> obj.button
@@ -64,16 +60,16 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
 
     }
 
-    public TeamForgeLocationUIPage(PlayerRef playerRef, BedwarsMap map, BedwarsTeam team) {
+    public SelectNumberOfMidForgesUIPage(PlayerRef playerRef, BedwarsMap map) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, ForgeData.CODEC);
         thisMap = map;
-        thisTeam = team;
+
     }
 
     @Override
     public void build(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt, Store<EntityStore> store) {
 
-        cmd.append("Pages/TeamForgeLocation.ui");
+        cmd.append("Pages/SelectNumberOfMidForges.ui");
 
         // Binding "Submit" to send the data
         evt.addEventBinding(
@@ -81,8 +77,7 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
                 "#Submit",
                 EventData.of("Button", "Submit")
                         .append("@InputX", "#InputX.Value")
-                        .append("@InputY", "#InputY.Value")
-                        .append("@InputZ", "#InputZ.Value"),
+                        .append("@InputY", "#InputY.Value"),
                 false
         );
 
@@ -106,7 +101,6 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
 
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
-        ArrayList<BedwarsTeam> teamsInTeamsManager = thisMap.getTeamsManager().getTeams();
 
         if (data.button == null) return; // safety check
 
@@ -115,17 +109,13 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
             case "Submit" -> {
                 try {
                     // Gather double values.
-                    double x = data.inputXText != null && !data.inputXText.isEmpty() ? Double.parseDouble(data.inputXText) : 0;
-                    double y = data.inputYText != null && !data.inputYText.isEmpty() ? Double.parseDouble(data.inputYText) : 0;
-                    double z = data.inputZText != null && !data.inputZText.isEmpty() ? Double.parseDouble(data.inputZText) : 0;
+                    int x = data.inputXText != null && !data.inputXText.isEmpty() ? Integer.parseInt(data.inputXText) : 0;
+                    int y = data.inputYText != null && !data.inputYText.isEmpty() ? Integer.parseInt(data.inputYText) : 0;
 
-                    // Message the player the coords they entered.
-                    BedwarsMessenger.coordinateEntry(player, x, y, z, "forge location of the " + thisTeam.getId() + " team");
-
-                    // Add the data to the BedwarsTeam.
-                    thisTeam.setForgeLocation(new Vector3d(x, y, z), player);
-                    // TODO: Somehow add a BedwarsItemTimer to the BedwarsItemTimerManager.
-                    // TODO: Maybe eliminate static lists of players and such and only attach it to BedwarsMap, just for thread safety.
+                    // Message the player the number of forges they are to register.
+                    BedwarsMessenger.midForgeEntry(player, x, y);
+                    numDiamondGens = x;
+                    numEmeraldGens = y;
 
                     // If the numbers aren't numbers.
                 } catch (NumberFormatException e) {
@@ -137,26 +127,15 @@ public class TeamForgeLocationUIPage extends InteractiveCustomUIPage<TeamForgeLo
             case "Cancel" -> {
                 player.getPageManager().setPage(ref, store, Page.None);
                 thisMap = null;
-                thisTeam = null;
             }
 
             case "Next" -> {
-                thisMap.addTeam(thisTeam);
-
-                int numTeams = switch (thisMap.getGamemode()) {
-                                                case ONES -> 8;
-                                                case TWOS -> 8;
-                                                case THREES -> 4;
-                                                case FOURS ->  4;
-                                                case FOURAFOUR -> 2;
-                                            };
-
-                if (teamsInTeamsManager.size() >= numTeams) {
-                    player.getPageManager().openCustomPage(ref, store, new SelectNumberOfMidForgesUIPage(playerRef, thisMap));
-                } else {
-                    player.getPageManager().openCustomPage(ref, store, new TeamColorSelectUIPage(playerRef, thisMap, thisTeam));
-                }
+                //TODO: reroute back to this same forge if count <= registered forges. carry count over in the constructor.
+                // TODO: message player if they have entered less than 2 emerald forges and/or less than 4 diamond forges.
+                player.getPageManager().openCustomPage(ref, store, new DiamondForgeLocationUIPage(playerRef, thisMap, numDiamondGens, numEmeraldGens, 0));
             }
+
+
         }
     }
 }

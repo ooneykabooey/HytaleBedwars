@@ -97,8 +97,8 @@ Group {
 - All team bed locations
 - All team resource locations
 - Desired gamemode
-- 4 (Diamond) resource locations
-- 2 (Emerald) resource locations";
+- At least 4 (Diamond) resource locations
+- At least 2 (Emerald) resource locations";
         }
 
       Group {Anchor: (Height:80);}

@@ -20,15 +20,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class BedwarsInGameQueueController {
 
-    private int startTime = 30;
+    private int startTime = 10;
     private int secondsRemaining = startTime;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private Bedwars plugin;
     private BedwarsMap thisMap;
     private BedwarsPlayerManager playerManager;
 
-    public BedwarsInGameQueueController(Bedwars plugin) {
-        this.plugin = plugin;
+    public BedwarsInGameQueueController(BedwarsMap map) {
+        thisMap = map;
     }
 
     /**
@@ -44,8 +43,10 @@ public class BedwarsInGameQueueController {
         // Set this BedwarsMap
         if (thisMap == null) {
             thisMap = Bedwars.getMapFromMaps(player.getWorld());
-            playerManager = thisMap.getPlayerManager();
         }
+
+        assert thisMap != null : "thisMap null within BedwarsInGameQueueController line 48 :(";
+        playerManager = thisMap.getPlayerManager();
 
         BedwarsMessenger.notEnoughPlayersMessage(player);
         playerManager.add(ref, player);
@@ -93,8 +94,8 @@ public class BedwarsInGameQueueController {
             }
 
             // Set active if not active already.
-            if (thisMap != null && !thisMap.isActive()) {
-                thisMap.setActive(true);
+            if (thisMap != null && !thisMap.gameCommenced()) {
+                thisMap.setCommenced(true);
             } else {
                 throw new NullPointerException("Tried to set a null BedwarsMap as active. May be caused from the first player joined being in a null world.");
             }
@@ -102,7 +103,7 @@ public class BedwarsInGameQueueController {
             // Call to send players to game, select teams, start ticking resources, make eligible for rejoin, etc.
             // TODO: Register the first map, then develop this.
             // start ticking resources...
-            //thisMap.getResourceTimer().start();
+            startGame();
 
             return;
         }
@@ -136,6 +137,16 @@ public class BedwarsInGameQueueController {
         // Send message to all players
     }
 
+    /** Start Game
+     *  Triggered when queue ends
+     *  Sets each player to a team (depending on gamemode)
+     *  and starts the forge ticking.
+     */
+    private void startGame() {
+        thisMap.setCommenced(true);
+        thisMap.getTeamsManager().initializeTeams(thisMap);
+        thisMap.getResourceTimer().start(thisMap.getResourceTimer().getStore(), thisMap.getResourceTimer().getSamplePlayer());
+    }
 
 
 }

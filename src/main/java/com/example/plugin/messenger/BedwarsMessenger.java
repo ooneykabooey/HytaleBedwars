@@ -112,6 +112,11 @@ public class BedwarsMessenger {
 
     ///  ----- COMMAND -------- ///
 
+    public static void activateMapExecutionFail(CommandContext context) {
+        context.sendMessage(Message.raw("You must register this map as a bedwars map before activating!"));
+    }
+
+
     /**
      * Tells the user what gamemodes there are.
      * DEPRECATED --- Use the UI.
@@ -245,6 +250,10 @@ public class BedwarsMessenger {
 
     public static void maxTeamsInitialized(Player player) {
         player.sendMessage(Message.raw("The limit of teams registered for this gamemode has been reached!"));
+    }
+
+    public static void midForgeEntry(Player player, int x, int y) {
+        player.sendMessage(Message.raw("You have registered " + x + " diamond forges and " + y + " emerald forges!"));
     }
 
 }

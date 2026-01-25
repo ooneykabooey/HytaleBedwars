@@ -1,6 +1,7 @@
 package com.example.plugin.entityinstances;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.managers.BedwarsTeamsManager;
 import com.example.plugin.utils.BedwarsItemTimer;
@@ -17,15 +18,17 @@ import java.util.*;
 ///  @author ooney
 public class BedwarsMap {
 
+    private boolean activated = false;
     private Bedwars plugin;
-    private boolean active;
+    private boolean commenced;
     private World world;
     private Vector3d queueSpawn;
     private ArrayList<BedwarsMidResource> midResources; // Resources at mid (Diamond, Emerald)
     private GAMEMODE gamemode;
-    private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(plugin);
+    private BedwarsItemTimerManager resourceTimer = new BedwarsItemTimerManager(this);
     private BedwarsPlayerManager playerManager = new BedwarsPlayerManager();
-    private BedwarsTeamsManager teamsManager = new BedwarsTeamsManager(playerManager);
+    private BedwarsTeamsManager teamsManager = new BedwarsTeamsManager(playerManager, this);
+    private BedwarsInGameQueueController queueController = new BedwarsInGameQueueController(this);
 
 
     public static final Map<String, GAMEMODE> possibleGamemodes = Map.of(
@@ -186,17 +189,20 @@ public class BedwarsMap {
 
     /// SET/GET ACTIVITY
 
-    public boolean isActive() {
-        return active;
+    public boolean gameCommenced() {
+        return commenced;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setCommenced(boolean active) {
+        this.commenced = active;
     }
+
+    public boolean isActivated() {return activated;}
+
+    public void setActivated(boolean value) {this.activated = value;}
 
     public void setPlugin(Bedwars bedwars) {
         this.plugin = bedwars;
-        this.resourceTimer.setPlugin(plugin);
     }
 
     public Bedwars getPlugin() {
@@ -224,6 +230,10 @@ public class BedwarsMap {
 
     public BedwarsPlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public BedwarsInGameQueueController getQueueController() {
+        return queueController;
     }
 
 
