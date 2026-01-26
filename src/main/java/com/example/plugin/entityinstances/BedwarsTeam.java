@@ -1,13 +1,18 @@
 package com.example.plugin.entityinstances;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimer;
+import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,17 +30,19 @@ public class BedwarsTeam {
     private Vector3d forgeLocation;
     private Vector3d bedLocation;
     private ArrayList<BedwarsItemTimer> forges = new ArrayList<>();
+    private Color color;
     private BedwarsMap thisMap;
 
     // TODO: Probably make this an ArrayList or ArraySet instead.
     private final ArrayList<BedwarsPlayer> players = new ArrayList<>();
 
-    public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation, Vector3d bedLocation, BedwarsMap map) {
+    public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation, Vector3d bedLocation, BedwarsMap map, Color color) {
         this.id = id;
         this.spawnLocation = spawnLocation;
         this.forgeLocation = forgeLocation;
         this.bedLocation = bedLocation;
         this.thisMap = map;
+        this.color = color;
     }
 
     public String getId() {
@@ -115,11 +122,12 @@ public class BedwarsTeam {
 
     /// UPDATE TEAM
 
-    public void updateTeam(Vector3i anyBlockBroken) {
+    public void updateTeam(Vector3i anyBlockBroken, BlockType blockType, BedwarsPlayer perpetrator) {
 
         ///  If the anyBlockBroken value from the parameter matches the bedLocation, turn off respawning.
-        if (anyBlockBroken != null && anyBlockBroken.toVector3d().equals(this.bedLocation)) {
+        if (anyBlockBroken != null && anyBlockBroken.toVector3d().equals(this.bedLocation) && blockType.getId().equals("Furniture_Crude_Bed")) {
             this.bedAlive = false;
+            BedwarsMessenger.bedDestroyed(this, thisMap, perpetrator);
             // TODO: Notify Team Members.
         }
 
@@ -138,4 +146,12 @@ public class BedwarsTeam {
 
         map.addAllToResourceTimer(forges);
     }
+
+
+    ///  GET COLOR
+
+    public Color getColor(){
+        return color;
+    }
+
 }

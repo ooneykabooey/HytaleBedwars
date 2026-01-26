@@ -10,6 +10,7 @@ import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.util.*;
@@ -173,8 +174,8 @@ public class BedwarsMap {
      *
      *
      */
-    public void updateMap(Vector3i anyBlockBroken) {
-        this.teamsManager.updateTeams(anyBlockBroken);
+    public void updateMap(Vector3i anyBlockBroken, BlockType blockType, BedwarsPlayer perpetrator) {
+        this.teamsManager.updateTeams(anyBlockBroken, blockType, perpetrator);
     }
 
     /// SET/GET TEAM MANAGER

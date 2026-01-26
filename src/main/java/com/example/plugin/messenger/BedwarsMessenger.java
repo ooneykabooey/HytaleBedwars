@@ -1,6 +1,9 @@
 package com.example.plugin.messenger;
 
 import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.entityinstances.BedwarsPlayer;
+import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.component.Store;
@@ -90,6 +93,19 @@ public class BedwarsMessenger {
         player.sendMessage(Message.raw("Welcome, this world has not been registered as a bedwars map, do /deploy to do so!"));
     }
 
+    public static void bedDestroyed(BedwarsTeam team, BedwarsMap map, BedwarsPlayer perpetrator) {
+        for (BedwarsPlayer player : team.getPlayers()) {
+            EventTitleUtil.showEventTitleToPlayer(player.getPlayerRef(), Message.raw("BED DESTROYED!"), Message.raw("You can no longer respawn!"), true);
+        }
+        for (BedwarsPlayer player : map.getPlayerManager().getAll()) {
+            player.getPlayer().sendMessage(Message.raw(team.getId() + "'s bed has been destroyed!").color(Color.RED));
+            player.getPlayer().sendMessage(Message.raw("Destroyed by: " + perpetrator.getPlayer().getDisplayName() + "!").color(perpetrator.getTeam().getColor()));
+        }
+    }
+
+    public static void cannotDestroyOwnBed(Player player) {
+        player.sendMessage(Message.raw("You cannot destroy your own bed!").color(Color.RED));
+    }
 
     ///  --------------------- ///
     ///  ---- DEBUG PROMPTS ---- ///

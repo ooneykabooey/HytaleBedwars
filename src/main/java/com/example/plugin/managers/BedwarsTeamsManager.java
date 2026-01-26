@@ -10,6 +10,7 @@ import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -60,9 +61,9 @@ public class BedwarsTeamsManager {
         return teams;
     }
 
-    public void updateTeams(Vector3i anyBlockBroken) {
+    public void updateTeams(Vector3i anyBlockBroken, BlockType blockType, BedwarsPlayer perpetrator) {
         for (BedwarsTeam team : teams) {
-            team.updateTeam(anyBlockBroken);
+            team.updateTeam(anyBlockBroken, blockType, perpetrator);
         }
     }
 

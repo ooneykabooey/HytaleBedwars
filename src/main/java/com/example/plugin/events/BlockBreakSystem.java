@@ -2,6 +2,7 @@ package com.example.plugin.events;
 
 import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
+import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsTeamsManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
@@ -20,6 +21,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -47,17 +49,19 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockE
 
         if (damageBlockEvent.getBlockType() != BlockType.EMPTY) {
 
-
-
             Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
 
             Player player = store.getComponent(ref, Player.getComponentType());
+            PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
             if (player == null) return;
+            if (playerRef == null) return;
 
             if (thisMap == null) {
                 thisMap = Bedwars.getMapFromMaps(player.getWorld());
             }
 
+            BedwarsPlayer perpetrator = thisMap.getPlayerManager().get(player);
+            if (perpetrator == null) return;
 
             BedwarsMessenger.playerDamagedBlockMessage(player);
 
@@ -79,8 +83,15 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockE
             }
 
             if (damageBlockEvent.getBlockType().getId().equals("Furniture_Crude_Bed")) {
-                if (thisMap != null) {
-                    thisMap.updateMap(damageBlockEvent.getTargetBlock());
+
+                assert thisMap != null;
+                if (!(thisMap.getPlayerManager().get(player).getTeam() == null) && !thisMap.getPlayerManager().get(player).getTeam().getBedLocation().equals(damageBlockEvent.getTargetBlock().toVector3d())) {
+                    thisMap.updateMap(damageBlockEvent.getTargetBlock(), damageBlockEvent.getBlockType(), perpetrator);
+                } else if (thisMap.getPlayerManager().get(player).getTeam() == null) {
+                    Universe.get().removePlayer(playerRef);
+                } else {
+                    damageBlockEvent.setCancelled(true);
+                    BedwarsMessenger.cannotDestroyOwnBed(player);
                 }
             }
         }

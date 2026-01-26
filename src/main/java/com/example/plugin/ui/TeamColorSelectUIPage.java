@@ -117,7 +117,8 @@ public class TeamColorSelectUIPage extends InteractiveCustomUIPage<TeamColorSele
                 new Vector3d(),
                 new Vector3d(),
                 new Vector3d(),
-                thisMap
+                thisMap,
+                color.getColor()
         );
         player.getPageManager().openCustomPage(ref, store, new TeamSpawnUIPage(playerRef, thisMap, thisTeam));
     }
