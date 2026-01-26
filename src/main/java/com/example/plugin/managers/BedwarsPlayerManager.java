@@ -20,28 +20,49 @@ import java.util.Map;
 public class BedwarsPlayerManager {
 
     // Ref<EntityStore> is the entity identity in ECS
-    private Map<Ref<EntityStore>, BedwarsPlayer> players = new HashMap<>();
-    private ArrayList<Ref<EntityStore>> indexOfPlayers = new ArrayList<>();
+    // TODO: Make players an ArrayList and refactor where its used, HashMaps are O(n) and not stable.
+    private ArrayList<BedwarsPlayer> players = new ArrayList<>();
+
+    // private ArrayList<BedwarsPlayer> players = new ArrayList<>();
+
 
     /**
      * Add a player to the manager.
      *
-     * @param ref    the player's entity reference
      * @param player the Player object
      */
-    public void add(Ref<EntityStore> ref, Player player) {
-        players.put(ref, new BedwarsPlayer(ref, player));
-        indexOfPlayers.add(ref);
+    public void add(Player player) {
+        players.add(new BedwarsPlayer(player));
+
     }
 
     /**
-     * Remove a player from the manager.
+     * Takes in a Player class to remove BedwarsPlayer
      *
-     * @param ref the player's entity reference
      */
-    public void remove(Ref<EntityStore> ref) {
-        players.remove(ref);
-        indexOfPlayers.remove(ref);
+    public void remove(Player p) {
+        for (BedwarsPlayer player : players) {
+            if (player.getPlayer().equals(p)) {
+                players.remove(player);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Takes in player ref to remove BedwarsPlayer.
+     * @param playerRef
+     */
+    public void remove(Ref<EntityStore> playerRef) {
+        for (BedwarsPlayer player : players) {
+            if (player.getRef().equals(playerRef)) {
+                players.remove(player);
+            }
+        }
+    }
+
+    public void remove(BedwarsPlayer player) {
+        players.remove(player);
     }
 
     /**
@@ -51,21 +72,57 @@ public class BedwarsPlayerManager {
      * @return the BedwarsPlayer object, or null if not found
      */
     public BedwarsPlayer get(Ref<EntityStore> ref) {
-        return players.get(ref);
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getRef().equals(ref)) {
+                return players.get(i);
+            }
+        }
+        return null;
     }
+
+    public BedwarsPlayer get(Player player) {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getPlayer().equals(player)) {
+                return players.get(i);
+            }
+        }
+        return null;
+    }
+
+    public BedwarsPlayer get(BedwarsPlayer player) {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).equals(player)) {
+                return players.get(i);
+            }
+        }
+        return null;
+    }
+
+    public BedwarsPlayer get(int index) {
+        return players.get(index);
+    }
+
 
     /**
      * Check if a player is registered.
      */
-    public boolean contains(Ref<EntityStore> ref) {
-        return players.containsKey(ref);
+    public boolean contains(BedwarsPlayer player) {
+        return players.contains(player);
+    }
+
+    public boolean contains(Player player) {
+        return players.contains(player);
+    }
+
+    public boolean contains(Ref<EntityStore> player) {
+        return players.contains(player);
     }
 
     /**
      * Get all registered BedWars players.
      */
     public Collection<BedwarsPlayer> getAll() {
-        return players.values();
+        return players;
     }
 
     /**
@@ -73,15 +130,5 @@ public class BedwarsPlayerManager {
      */
     public int getSize() {return players.size();}
 
-    /**
-     * @return Get the indexOfPlayers arraylist.
-     */
-    public ArrayList<Ref<EntityStore>> getIndexOfPlayers() {return indexOfPlayers;}
 
-    /** Get a player from an index of keys.
-     *
-     * @param i Index of the arraylist to search.
-     * @return The player at that key.
-     */
-    public BedwarsPlayer getPlayerFromIndex(int i) {return players.get(indexOfPlayers.get(i));}
 }

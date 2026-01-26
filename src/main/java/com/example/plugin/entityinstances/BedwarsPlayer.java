@@ -2,6 +2,7 @@ package com.example.plugin.entityinstances;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /// @author yasha, ooney
@@ -9,15 +10,17 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 public class BedwarsPlayer {
 
     private final Ref<EntityStore> ref;
+    private final PlayerRef playerRef;
     private final Player player;
 
     private BedwarsTeam team;
     private boolean spectator = false;
     private boolean rejoinEligible = false;
 
-    public BedwarsPlayer(Ref<EntityStore> ref, Player player) {
-        this.ref = ref;
+    public BedwarsPlayer(Player player) {
         this.player = player;
+        this.ref = player.getReference();
+        this.playerRef = (PlayerRef) ref.getStore().getComponent(ref, PlayerRef.getComponentType());
     }
 
     public Ref<EntityStore> getRef() {
@@ -26,6 +29,11 @@ public class BedwarsPlayer {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Player getPlayerFromRef(Ref<EntityStore> ref) {
+        assert ref != null : "ref null when trying to run getPlayerFromRef";
+        return ref.getStore().getComponent(ref, Player.getComponentType());
     }
 
     /**
@@ -42,13 +50,20 @@ public class BedwarsPlayer {
 
         // Add to new team
         if (newTeam != null) {
-            newTeam.addPlayer(ref);
+            newTeam.addPlayer(this);
         }
     }
 
     public BedwarsTeam getTeam() {
         return team;
     }
+
+    ///  GET/SET PLAYERREF
+
+    public PlayerRef getPlayerRef() {
+        return playerRef;
+    }
+
 
     /**
      * BedWars respawn rule:

@@ -9,9 +9,14 @@ import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
+import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -62,10 +67,23 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
             thisMap.getResourceTimer().setSamplePlayer(player);
             if (thisMap.isActivated()) {
                 queueController = thisMap.getQueueController();
-                if (!thisMap.gameCommenced()) {
 
-                    PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
-                    queueController.addPlayer(ref, player);
+                if (!thisMap.gameCommenced()) {
+                    BedwarsMap thisMap = Bedwars.getMapFromMaps(player.getWorld());
+                    Vector3d queueSpawn = thisMap.getQueueSpawn();
+
+                    Transform whereTo = new Transform(queueSpawn, new Vector3f(0, 0, 0));
+
+
+                    queueController.addPlayer(player);
+
+                    assert ref != null : "playerRef null when trying to read their join info.";
+                    assert thisMap != null : "This world is not in the list of maps!!";
+
+                    // TELEPORT PLAYER UPON JOIN TO QUEUE SPAWN LOCATION.
+                    World world = thisMap.getWorld();
+                    Bedwars.teleportTo(thisMap.getPlayerManager().get(player), world, ref, queueSpawn, new Vector3f(), world.getName());
+
                 } else {
                     if (thisMap.getPlayerManager().contains(ref)) {
                         if (thisMap.getPlayerManager().get(ref).canRejoin()) {

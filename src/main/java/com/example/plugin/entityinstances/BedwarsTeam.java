@@ -27,9 +27,8 @@ public class BedwarsTeam {
     private ArrayList<BedwarsItemTimer> forges = new ArrayList<>();
     private BedwarsMap thisMap;
 
-
-    // ECS-entity references instead of UUIDs
-    private final Set<Ref<EntityStore>> players = new HashSet<>();
+    // TODO: Probably make this an ArrayList or ArraySet instead.
+    private final ArrayList<BedwarsPlayer> players = new ArrayList<>();
 
     public BedwarsTeam(String id, Vector3d spawnLocation, Vector3d forgeLocation, Vector3d bedLocation, BedwarsMap map) {
         this.id = id;
@@ -57,11 +56,11 @@ public class BedwarsTeam {
 
     /**
      * Adds a player to this team.
-     * @param ref the ECS entity reference of the player
      */
-    public void addPlayer(Ref<EntityStore> ref) {
-        players.add(ref);
+    public void addPlayer(BedwarsPlayer player) {
+        players.add(player);
     }
+
 
     /**
      * Removes a player from this team.
@@ -74,7 +73,7 @@ public class BedwarsTeam {
     /**
      * Returns all players currently on this team.
      */
-    public Set<Ref<EntityStore>> getPlayers() {
+    public ArrayList<BedwarsPlayer> getPlayers() {
         return players;
     }
 

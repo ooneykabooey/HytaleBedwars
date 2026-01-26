@@ -1,5 +1,6 @@
 package com.example.plugin.managers;
 
+import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.entityinstances.BedwarsTeam;
@@ -21,7 +22,6 @@ import java.util.List;
 
 public class BedwarsTeamsManager {
 
-    private BedwarsMap thisMap;
     public ArrayList<BedwarsTeam> teams = new ArrayList<>();
     private BedwarsPlayerManager playerManager;
 
@@ -32,10 +32,11 @@ public class BedwarsTeamsManager {
 
     // Give the players their team assignments.
     public void initializeTeams(BedwarsMap map) {
-        for (Ref<EntityStore> playerKey : playerManager.getIndexOfPlayers()) {
-            playerManager.get(playerKey).setTeam(teams.get((int) Math.floor(Math.random() * teams.size())));
+        World world = map.getWorld();
+        for (BedwarsPlayer player : playerManager.getAll()) {
+            playerManager.get(player).setTeam(teams.get((int) Math.floor(Math.random() * teams.size())));
         }
-        teleportPlayersToTeamSpawnLocations(map);
+        teleportPlayersToTeamSpawnLocations(world);
     }
 
     public void addToTeam(BedwarsTeam team) {
@@ -65,30 +66,18 @@ public class BedwarsTeamsManager {
         }
     }
 
-    public void teleportPlayersToTeamSpawnLocations(BedwarsMap map) {
-        World thisWorld = map.getWorld();
-        if (thisWorld == null) return;
+    public void teleportPlayersToTeamSpawnLocations(World world) {
+
+        Store<EntityStore> store = world.getEntityStore().getStore();
+
 
         for (BedwarsTeam team : teams) {
-            for (Ref<EntityStore> playerRef : team.getPlayers()) {
-                thisWorld.execute(() -> {
-                    if (playerRef == null) return;
-                    Store<EntityStore> store = playerRef.getStore();
-                    Teleport teleport = Teleport.createForPlayer(thisWorld,
-                            team.getSpawnLocation(),
-                            new Vector3f(0,0,0));
-                    store.addComponent(playerRef, Teleport.getComponentType(), teleport);
-                });
+            for (BedwarsPlayer player : team.getPlayers()) {
+                Bedwars.teleportTo(player, world, player.getRef(), team.getSpawnLocation(), new Vector3f(), world.getName());
+                // TODO: This throws "Incorrect teleportId" when teleporting from the queue spawn.
             }
         }
-    }
 
-    public void setBedwarsMap(BedwarsMap map) {
-        thisMap = map;
-    }
-
-    public BedwarsMap getThisMap() {
-        return thisMap;
     }
 
 }

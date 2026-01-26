@@ -34,10 +34,9 @@ public class BedwarsInGameQueueController {
      * Add a player to the list of BedwarsPlayers.
      * If and only if they are eligible or the queue is in session.
      *
-     * @param ref
      * @param player
      */
-    public void addPlayer(Ref<EntityStore> ref, Player player) {
+    public void addPlayer(Player player) {
          // If game has started, render them dead or eliminated.
 
         // Set this BedwarsMap
@@ -49,7 +48,7 @@ public class BedwarsInGameQueueController {
         playerManager = thisMap.getPlayerManager();
 
         BedwarsMessenger.notEnoughPlayersMessage(player);
-        playerManager.add(ref, player);
+        playerManager.add(player);
         updateQueue();
         // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
     }
@@ -58,11 +57,9 @@ public class BedwarsInGameQueueController {
      * Remove a player from the list of BedwarsPlayers.
      * Will truly remove the player if they are ineligible to rejoin.
      *
-     * @param ref
      */
-    public void removePlayer(Ref<EntityStore> ref) {
-        BedwarsPlayer player = playerManager.get(ref);
-        playerManager.remove(ref);
+    public void removePlayer(Player player) {
+        playerManager.remove(player);
         updateQueue();
     }
 
@@ -89,8 +86,8 @@ public class BedwarsInGameQueueController {
 
             stopCountdown();
 
-            for (Ref<EntityStore> player : playerManager.getIndexOfPlayers()) {
-                BedwarsMessenger.queueDoneTestMessage(playerManager.get(player).getPlayer());
+            for (BedwarsPlayer player : playerManager.getAll()) {
+                BedwarsMessenger.queueDoneTestMessage(player.getPlayer());
             }
 
             // Set active if not active already.
