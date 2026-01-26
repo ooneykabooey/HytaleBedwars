@@ -7,6 +7,7 @@ import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
+import com.example.plugin.events.InstantRespawnSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
@@ -72,6 +73,7 @@ public class Bedwars extends JavaPlugin {
         estorereg.registerSystem(new BlockBreakSystem(this));
         estorereg.registerSystem(new BlockPlaceSystem());
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
+        estorereg.registerSystem(new InstantRespawnSystem());
 
         this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));

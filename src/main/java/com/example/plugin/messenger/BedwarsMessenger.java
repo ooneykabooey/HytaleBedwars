@@ -75,20 +75,6 @@ public class BedwarsMessenger {
         player.sendMessage(Message.raw("Three or more people required to play."));
     }
 
-    /** Send a welcome message to the joining player.
-     *    Sends a message based on if its their first time in the universe.
-     *
-     */
-    public static void welcomeMessage(Player player) {
-       // if (player != null && player.isFirstSpawn()) {
-            //player.sendMessage(Message.raw("Welcome to Hytale Bedwars!"));
-        //} else {
-            player.sendMessage(Message.raw("Welcome back!"));
-        //}
-        ///  ^^ player.isFirstSpawn() only applies to the world, not the universe.
-        ///  We don't want the message to repeat for every new map the user joins.
-    }
-
     public static void promptUserToDeploy(Player player) {
         player.sendMessage(Message.raw("Welcome, this world has not been registered as a bedwars map, do /deploy to do so!"));
     }
