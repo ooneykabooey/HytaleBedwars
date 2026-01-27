@@ -6,13 +6,13 @@ import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 ///  @author ooney
@@ -25,7 +25,7 @@ public class BedwarsInGameQueueController {
     private int startTime = 45;
     private int secondsRemaining = startTime;
     private boolean started;
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduledTask;
     private BedwarsMap thisMap;
     private BedwarsPlayerManager playerManager;
 
@@ -126,7 +126,7 @@ public class BedwarsInGameQueueController {
             BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
 
 
-                scheduler.scheduleAtFixedRate(() -> {
+            scheduledTask = HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(() -> {
                     thisMap.getWorld().execute(() -> {
                         if (secondsRemaining > 0) {
                             secondsRemaining--;
@@ -146,7 +146,11 @@ public class BedwarsInGameQueueController {
      * Completely stops the game countdown, notifies players of it.
      */
     public @Nullable CompletableFuture<Void> stopCountdown() {
-        scheduler.shutdownNow();
+        if (scheduledTask != null) {
+            scheduledTask.cancel(false);
+            scheduledTask = null;
+        }
+        started = false;
         return CompletableFuture.completedFuture(null);
         // Send message to all players
     }
