@@ -35,14 +35,18 @@ public class BedwarsItemTimer {
     private Vector3d location;
     private BedwarsMap thisMap;
     private BedwarsTeam thisTeam;
+    private boolean isUpgrade;
 
-    public BedwarsItemTimer(String ID, int seconds, DropEntry dropEntry, Vector3d location, BedwarsMap map, BedwarsTeam team)  {
+    public BedwarsItemTimer(String ID, int seconds, DropEntry dropEntry, Vector3d location, BedwarsMap map, BedwarsTeam team, boolean isUpgrade)  {
         this.ID = ID;
         this.start = seconds;
         this.current = seconds;
         this.dropEntry = dropEntry;
         //this.store = map.getWorld().getEntityStore();
         this.location = location;
+        thisMap = map;
+        thisTeam = team;
+        this.isUpgrade = isUpgrade;
     }
 
     /** tick the timer by one unit. Drop the item once completed.

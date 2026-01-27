@@ -141,7 +141,7 @@ public class EmeraldForgeLocationUIPage extends InteractiveCustomUIPage<EmeraldF
 
             case "Next" -> {
 
-                thisMap.getResourceTimer().addTimer(new BedwarsItemTimer("EMERALD", 60, new BedwarsItemTimer.DropEntry("Rock_Gem_Emerald", 1), location, thisMap, null));
+                thisMap.getResourceTimer().addTimer(new BedwarsItemTimer("EMERALD", 60, new BedwarsItemTimer.DropEntry("Rock_Gem_Emerald", 1), location, thisMap, null, false));
                 count++;
                 if (count >= numEmeraldGens) {
                     // TODO: Make "END" Page.

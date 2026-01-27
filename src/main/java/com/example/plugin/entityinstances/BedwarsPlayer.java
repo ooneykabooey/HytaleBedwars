@@ -14,7 +14,7 @@ public class BedwarsPlayer {
     private final Player player;
 
     private BedwarsTeam team;
-    private boolean spectator = false;
+    private boolean eliminated = false;
     private boolean rejoinEligible = false;
 
     public BedwarsPlayer(Player player) {
@@ -73,12 +73,12 @@ public class BedwarsPlayer {
         return team != null && team.hasBed();
     }
 
-    public boolean isSpectator() {
-        return spectator;
+    public boolean isEliminated() {
+        return eliminated;
     }
 
-    public void setSpectator(boolean spectator) {
-        this.spectator = spectator;
+    public void setEliminated(boolean eliminated) {
+        this.eliminated = eliminated;
     }
 
 
@@ -91,5 +91,14 @@ public class BedwarsPlayer {
         rejoinEligible = value;
     }
 
-}
+    /**
+     * Kicks the player from the server with a custom message.
+     * @param reason the kick message displayed to the client
+     */
+    public void kick(String reason) {
+        if (playerRef != null && playerRef.getPacketHandler().getChannel().isActive()) {
+            playerRef.getPacketHandler().disconnect(reason);
+        }
+    }
 
+}

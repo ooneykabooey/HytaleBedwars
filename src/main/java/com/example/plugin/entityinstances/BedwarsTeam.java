@@ -57,9 +57,6 @@ public class BedwarsTeam {
         return bedAlive;
     }
 
-    public void destroyBed() {
-        bedAlive = false;
-    }
 
     /**
      * Adds a player to this team.
@@ -74,7 +71,7 @@ public class BedwarsTeam {
      * @param ref the ECS entity reference of the player
      */
     public void removePlayer(Ref<EntityStore> ref) {
-        players.remove(ref);
+        players.removeIf(p -> p.getRef().equals(ref));
     }
 
     /**
@@ -88,7 +85,18 @@ public class BedwarsTeam {
      * Optional helper: check if a player is on this team
      */
     public boolean containsPlayer(Ref<EntityStore> ref) {
-        return players.contains(ref);
+        return players.stream().anyMatch(p -> p.getRef().equals(ref));
+    }
+
+    /**
+     * Clear all players from the players list.
+     */
+    public void clearPlayerList() {
+        players.clear();
+    }
+
+    public Vector3d getForgeLocation() {
+        return forgeLocation;
     }
 
 
@@ -128,7 +136,6 @@ public class BedwarsTeam {
         if (anyBlockBroken != null && anyBlockBroken.toVector3d().equals(this.bedLocation) && blockType.getId().equals("Furniture_Crude_Bed")) {
             this.bedAlive = false;
             BedwarsMessenger.bedDestroyed(this, thisMap, perpetrator);
-            // TODO: Notify Team Members.
         }
 
     }
@@ -136,10 +143,8 @@ public class BedwarsTeam {
     ///  INITIALIZE FORGES
 
     public void initializeTeamForges(Vector3d vector, Player player, BedwarsMap map) {
-        forges.add(new BedwarsItemTimer("GOLD", 8, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Gold", 1), vector, thisMap, this));
-        forges.add(new BedwarsItemTimer("IRON", 1, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Iron", 1), vector, thisMap, this));
-
-
+        forges.add(new BedwarsItemTimer("GOLD", 8, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Gold", 1), vector, thisMap, this, false));
+        forges.add(new BedwarsItemTimer("IRON", 1, new BedwarsItemTimer.DropEntry("Ingredient_Bar_Iron", 1), vector, thisMap, this, false));
 
         assert map != null;
         assert map.getResourceTimer() != null;

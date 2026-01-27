@@ -12,6 +12,7 @@ import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -64,6 +65,8 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
 
         assert player.getWorld() != null;
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
+
+
 
         if (thisMap != null) {
             thisMap.getResourceTimer().setStore(store);
@@ -136,8 +139,12 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
         assert thisMap != null : "Failed to remove player from player manager, the BedwarsMap registered as null when the player left.";
         assert thisMap.getPlayerManager() != null;
 
-        if (thisMap.isActivated() && !thisMap.gameCommenced() && (thisMap.getPlayerManager().contains(ref) || thisMap.getPlayerManager().contains(player))) {
-                thisMap.getPlayerManager().remove(player);
+        if (thisMap.isActivated() && !thisMap.gameCommenced() && thisMap.getPlayerManager().contains(player)) {
+            queueController.removePlayer(player);
+        }
+
+        if (thisMap.gameCommenced() && thisMap.getPlayerManager().getSize() <= 0 && thisMap.getWorld().getPlayerCount() <= 0) {
+            thisMap.endGame();
         }
 
         // Execute during game queue

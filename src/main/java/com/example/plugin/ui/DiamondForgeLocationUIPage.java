@@ -145,15 +145,16 @@ public class DiamondForgeLocationUIPage extends InteractiveCustomUIPage<DiamondF
 
             case "Next" -> {
 
-                thisMap.getResourceTimer().addTimer(new BedwarsItemTimer("DIAMOND", 45, new BedwarsItemTimer.DropEntry("Rock_Gem_Diamond", 1), location, thisMap, null));
+                thisMap.getResourceTimer().addTimer(new BedwarsItemTimer("DIAMOND", 45, new BedwarsItemTimer.DropEntry("Rock_Gem_Diamond", 1), location, thisMap, null, false));
                 count++;
+
                 if (count >= numDiamondGens) {
                     player.getPageManager().openCustomPage(ref, store, new EmeraldForgeLocationUIPage(playerRef, thisMap, numEmeraldGens, 0));
                 } else {
                     player.getPageManager().openCustomPage(ref, store, new DiamondForgeLocationUIPage(playerRef, thisMap, numDiamondGens, numEmeraldGens, count));
                 }
-            }
 
+            }
 
         }
     }

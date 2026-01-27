@@ -8,10 +8,19 @@ import com.example.plugin.utils.BedwarsItemTimer;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.utils.TeamColor;
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
+import com.hypixel.hytale.server.core.modules.entity.item.ItemPhysicsComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.*;
 
@@ -253,4 +262,81 @@ public class BedwarsMap {
     public void removeBlockPlaced(Vector3i block) {
         blocksPlaced.remove(block);
     }
+
+
+    ///  ------------------- ///
+    /// ----- END GAME ------ ///
+    ///  ------------------- ///
+
+    public void endGame() {
+
+        /// CLEAR ALL PLACED BLOCKS FROM MAP
+        for (Vector3i block : blocksPlaced) {
+            world.setBlock(block.x, block.y, block.z, BlockType.EMPTY_KEY);
+        }
+
+        /// CLEAR ALL PLAYERS FROM TEAMS, RESET ALL BEDS
+        for (BedwarsTeam team : teamsManager.getTeams()) {
+            
+            team.clearPlayerList();
+            Vector3i bedLocation = team.getBedLocation().toVector3i();
+            
+            if (world.getBlockType(bedLocation).equals(BlockType.EMPTY)) {
+                world.setBlock(bedLocation.x, bedLocation.y, bedLocation.z, "Furniture_Crude_Bed");
+            }
+
+            team.clearPlayerList();
+        }
+
+        /// REMOVE ALL PLAYERS FROM WORLD
+        if (!playerManager.getAll().isEmpty()) {
+            for (BedwarsPlayer player : playerManager.getAll()) {
+                // Temporary measure, refer to the server lobby once it gets implemented.
+                if (player.isEliminated()) {
+                    player.kick("Good Game! You'll get'em next time :)");
+                } else {
+                    player.kick("Good Game! Amazing win!!");
+                }
+            }
+        }
+
+        // STOP ALL RESOURCES SPAWNING
+        resourceTimer.stop();
+
+        /// KILL ALL ITEMS SPAWNED, I CREDIT CLEARITY PLUGIN FOR THIS.
+        if (world.isAlive()) {
+            world.execute(() -> {
+
+                Store<EntityStore> store = world.getEntityStore().getStore();
+                ComponentType<EntityStore, ItemComponent> itemType = ItemComponent.getComponentType();
+                Query<EntityStore> query = Query.and(itemType);
+
+                int[] removed = new int[]{0};
+
+                store.forEachChunk(query, (chunk, buffer) -> {
+                    int size = chunk.size();
+
+                    for (int i = 0; i < size; ++i) {
+                        Ref<EntityStore> ref = chunk.getReferenceTo(i);
+                        int x = removed[0]++;
+                        buffer.tryRemoveEntity(ref, RemoveReason.REMOVE);
+                    }
+
+                });
+
+            });
+
+        }
+
+
+
+
+
+
+        // Reset all in-game timers (sudden death/resource ramp ups)
+        // Reset all team upgrades
+
+        commenced = false;
+    }
+
 }

@@ -42,7 +42,7 @@ public class BedwarsTeamsManager {
 
         // Assign each player a random team.
         for (BedwarsPlayer player : playerManager.getAll()) {
-            List<BedwarsTeam> availableTeams = teams.stream().filter(team -> team.getPlayers().size() <= maxTeamSize).toList();
+            List<BedwarsTeam> availableTeams = teams.stream().filter(team -> team.getPlayers().size() < maxTeamSize).toList();
 
             if (availableTeams.isEmpty()) {
                 throw new IllegalStateException("Too many players in the lobby to fill each team!!");

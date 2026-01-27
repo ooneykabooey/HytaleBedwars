@@ -72,6 +72,9 @@ public class BedwarsInGameQueueController {
      */
     public void updateQueue() {
         assert playerManager != null;
+        if (thisMap == null) return;
+        if (thisMap.gameCommenced()) return;
+
         // Start countdown once 3 or more players join.
         if (playerManager.getSize() >= 1) { // Start a countdown to the game.
             startOrCompleteCountdown(false);
@@ -165,6 +168,8 @@ public class BedwarsInGameQueueController {
         thisMap.getTeamsManager().initializeTeams(thisMap);
         thisMap.getResourceTimer().start(thisMap.getResourceTimer().getStore(), thisMap.getResourceTimer().getSamplePlayer());
     }
+
+
 
 
 }

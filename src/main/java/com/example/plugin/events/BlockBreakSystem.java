@@ -63,6 +63,7 @@ public class BlockBreakSystem extends EntityEventSystem<EntityStore, BreakBlockE
             World world = player.getWorld();
             if (world == null) return;
 
+
             if (thisMap == null) {
                 thisMap = Bedwars.getMapFromMaps(world);
             }
