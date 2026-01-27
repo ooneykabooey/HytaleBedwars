@@ -33,10 +33,7 @@ public class InstantRespawnSystem extends DeathSystems.OnDeathSystem {
        if (thisMap == null) {
            thisMap = Bedwars.getMapFromMaps(player.getWorld());
        }
-
-
-
-
+       
        EntityStore entityStore = (EntityStore) commandBuffer.getExternalData();
        World world = entityStore.getWorld();
        world.execute(() -> {

@@ -9,6 +9,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +22,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class BedwarsInGameQueueController {
 
-    private int startTime = 10;
+    private int startTime = 45;
     private int secondsRemaining = startTime;
+    private boolean started;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private BedwarsMap thisMap;
     private BedwarsPlayerManager playerManager;
@@ -49,7 +52,8 @@ public class BedwarsInGameQueueController {
 
         BedwarsMessenger.notEnoughPlayersMessage(player);
         playerManager.add(player);
-        updateQueue();
+        thisMap.getWorld().execute(this::updateQueue);
+
         // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
     }
 
@@ -67,8 +71,9 @@ public class BedwarsInGameQueueController {
      * Interacts with the game countdown based on how many players are in the lobby.
      */
     public void updateQueue() {
+        assert playerManager != null;
         // Start countdown once 3 or more players join.
-        if (playerManager.getSize() >= 1) { // Start a countdown to the game.
+        if (playerManager.getSize() >= 3) { // Start a countdown to the game.
             startOrCompleteCountdown(false);
         } else if (playerManager.getSize() == 8) { // Force start the game
             startOrCompleteCountdown(true);
@@ -81,7 +86,8 @@ public class BedwarsInGameQueueController {
      *
      * @param complete If the timer should automatically complete, due to full players.
      */
-    public void startOrCompleteCountdown(boolean complete) {
+    protected @Nullable CompletableFuture<Void> startOrCompleteCountdown(boolean complete) {
+        assert playerManager != null;
         if (complete) {
 
             stopCountdown();
@@ -94,7 +100,7 @@ public class BedwarsInGameQueueController {
             if (thisMap != null && !thisMap.gameCommenced()) {
                 thisMap.setCommenced(true);
             } else {
-                throw new NullPointerException("Tried to set a null BedwarsMap as active. May be caused from the first player joined being in a null world.");
+                return CompletableFuture.completedFuture(null);
             }
 
             // Call to send players to game, select teams, start ticking resources, make eligible for rejoin, etc.
@@ -102,35 +108,46 @@ public class BedwarsInGameQueueController {
             // start ticking resources...
             startGame();
 
-            return;
+
+        } else {
+            startCountdown();
         }
-        startCountdown();
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Starts a countdown to start the game to allow more people to join.
      */
-    public void startCountdown() {
+    protected @Nullable CompletableFuture<Void> startCountdown() {
+        if (!started) { // don't create another scheduler if more people join.
+            started = true;
+            secondsRemaining = startTime; // Reset to start time, assuming secondsRemaining will stay decremented after any potential reset.
 
-        secondsRemaining = startTime; // Reset to start time, assuming secondsRemaining will stay decremented after any potential reset.
+            BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
 
-        BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
-        scheduler.scheduleAtFixedRate(() -> {
-            if (secondsRemaining > 0) {
-                secondsRemaining--;
-                BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
-            } else {
-                // Entering game...
-                startOrCompleteCountdown(true);
-            }
-        },1,1, TimeUnit.SECONDS);
+
+                scheduler.scheduleAtFixedRate(() -> {
+                    thisMap.getWorld().execute(() -> {
+                        if (secondsRemaining > 0) {
+                            secondsRemaining--;
+                            BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
+                        } else {
+                            // Entering game...
+                            startOrCompleteCountdown(true);
+                        }
+                    });
+                },1,1, TimeUnit.SECONDS);
+
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Completely stops the game countdown, notifies players of it.
      */
-    public void stopCountdown() {
+    public @Nullable CompletableFuture<Void> stopCountdown() {
         scheduler.shutdownNow();
+        return CompletableFuture.completedFuture(null);
         // Send message to all players
     }
 

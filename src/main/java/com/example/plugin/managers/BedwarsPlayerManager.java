@@ -3,6 +3,7 @@ package com.example.plugin.managers;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.ArrayList;
@@ -24,6 +25,13 @@ public class BedwarsPlayerManager {
     private ArrayList<BedwarsPlayer> players = new ArrayList<>();
 
     // private ArrayList<BedwarsPlayer> players = new ArrayList<>();
+
+    public void startGameGiveKit() {
+        for (BedwarsPlayer player : players) {
+            player.getPlayer().getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Weapon_Sword_Wood", 1));
+            player.getPlayer().getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Cloth_Block_Wool_" + player.getTeam().getId(), 100));
+        }
+    }
 
 
     /**
@@ -121,7 +129,7 @@ public class BedwarsPlayerManager {
     /**
      * Get all registered BedWars players.
      */
-    public Collection<BedwarsPlayer> getAll() {
+    public ArrayList<BedwarsPlayer> getAll() {
         return players;
     }
 

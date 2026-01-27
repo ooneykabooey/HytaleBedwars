@@ -32,7 +32,7 @@ public class BedwarsRespawnManager extends RespawnSystems.OnRespawnSystem {
         Player player = store.getComponent(ref, Player.getComponentType());
 
         // Give starter items (add to hotbar first, then storage)[^2]
-        player.getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Tool_Sword_Wood", 1));
+        player.getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Weapon_Sword_Wood", 1));
         player.getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Consumable_Apple", 5));
 
         // Send welcome back message

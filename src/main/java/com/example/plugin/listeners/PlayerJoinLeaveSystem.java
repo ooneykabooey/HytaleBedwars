@@ -21,6 +21,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
 
 
 /// @author ooney
@@ -57,7 +58,9 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
     @Override
     public void onEntityAdded(@Nonnull Ref<EntityStore> ref, @Nonnull AddReason addReason, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         Player player = (Player) store.getComponent(ref, Player.getComponentType());
+        assert player.getInventory() != null;
 
+        player.getInventory().clear(); // Clear the player's inventory when they join.
 
         assert player.getWorld() != null;
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
@@ -126,13 +129,15 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
         Player player = (Player) store.getComponent(ref, Player.getComponentType());
         PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
 
+        // Null/Invalidity Checks
+        assert player != null;
         assert player.getWorld() != null;
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
         assert thisMap != null : "Failed to remove player from player manager, the BedwarsMap registered as null when the player left.";
-        if (thisMap.isActivated()) {
-             if (!thisMap.gameCommenced()) {
-                thisMap.getPlayerManager().remove(ref);
-            }
+        assert thisMap.getPlayerManager() != null;
+
+        if (thisMap.isActivated() && !thisMap.gameCommenced() && (thisMap.getPlayerManager().contains(ref) || thisMap.getPlayerManager().contains(player))) {
+                thisMap.getPlayerManager().remove(player);
         }
 
         // Execute during game queue
