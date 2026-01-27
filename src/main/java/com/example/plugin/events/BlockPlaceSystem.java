@@ -1,5 +1,7 @@
 package com.example.plugin.events;
 
+import com.example.plugin.Bedwars;
+import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -41,9 +43,11 @@ public class BlockPlaceSystem extends EntityEventSystem<EntityStore, PlaceBlockE
 
         Vector3i pos = placeBlockEvent.getTargetBlock();
 
-        // TODO: Any registered beds' coordinates needs to be automatically put into the blocksPlaced list, so that the user can break them.
-        BlockBreakSystem.blocksPlaced.add(pos);
-        BedwarsMessenger.playerPlacedBlockMessage(player);
+        BedwarsMap map = Bedwars.getMapFromMaps(world);
+        if (map != null) {
+            map.addBlockPlaced(pos);
+            BedwarsMessenger.playerPlacedBlockMessage(player);
+        }
     }
 
     @Nullable

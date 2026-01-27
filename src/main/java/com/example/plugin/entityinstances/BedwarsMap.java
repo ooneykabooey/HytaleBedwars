@@ -30,6 +30,7 @@ public class BedwarsMap {
     private BedwarsPlayerManager playerManager = new BedwarsPlayerManager();
     private BedwarsTeamsManager teamsManager = new BedwarsTeamsManager(playerManager, this);
     private BedwarsInGameQueueController queueController = new BedwarsInGameQueueController(this);
+    private Set<Vector3i> blocksPlaced = new HashSet<>();
 
 
     public static final Map<String, GAMEMODE> possibleGamemodes = Map.of(
@@ -237,5 +238,19 @@ public class BedwarsMap {
         return queueController;
     }
 
+    public Set<Vector3i> getBlocksPlaced() {
+        return blocksPlaced;
+    }
 
+    public void addBlockPlaced(Vector3i block) {
+        blocksPlaced.add(block);
+    }
+
+    public boolean isBlockPlaced(Vector3i block) {
+        return blocksPlaced.contains(block);
+    }
+
+    public void removeBlockPlaced(Vector3i block) {
+        blocksPlaced.remove(block);
+    }
 }

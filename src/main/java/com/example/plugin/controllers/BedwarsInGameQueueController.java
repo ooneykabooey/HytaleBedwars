@@ -73,7 +73,7 @@ public class BedwarsInGameQueueController {
     public void updateQueue() {
         assert playerManager != null;
         // Start countdown once 3 or more players join.
-        if (playerManager.getSize() >= 3) { // Start a countdown to the game.
+        if (playerManager.getSize() >= 1) { // Start a countdown to the game.
             startOrCompleteCountdown(false);
         } else if (playerManager.getSize() == 8) { // Force start the game
             startOrCompleteCountdown(true);

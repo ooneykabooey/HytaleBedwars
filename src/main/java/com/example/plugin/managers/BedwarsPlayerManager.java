@@ -8,8 +8,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 ///  @author yasha, ooney
@@ -20,14 +20,11 @@ import java.util.Map;
  */
 public class BedwarsPlayerManager {
 
-    // Ref<EntityStore> is the entity identity in ECS
-    // TODO: Make players an ArrayList and refactor where its used, HashMaps are O(n) and not stable.
-    private ArrayList<BedwarsPlayer> players = new ArrayList<>();
-
-    // private ArrayList<BedwarsPlayer> players = new ArrayList<>();
+    // Ref<EntityStore> is the entity identity in ECS. Using ConcurrentHashMap for thread-safety and O(1) lookups.
+    private final Map<Ref<EntityStore>, BedwarsPlayer> players = new ConcurrentHashMap<>();
 
     public void startGameGiveKit() {
-        for (BedwarsPlayer player : players) {
+        for (BedwarsPlayer player : players.values()) {
             player.getPlayer().getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Weapon_Sword_Wood", 1));
             player.getPlayer().getInventory().getCombinedHotbarFirst().addItemStack(new ItemStack("Cloth_Block_Wool_" + player.getTeam().getId(), 100));
         }
@@ -40,8 +37,9 @@ public class BedwarsPlayerManager {
      * @param player the Player object
      */
     public void add(Player player) {
-        players.add(new BedwarsPlayer(player));
-
+        if (player == null) return;
+        BedwarsPlayer bedwarsPlayer = new BedwarsPlayer(player);
+        players.put(bedwarsPlayer.getRef(), bedwarsPlayer);
     }
 
     /**
@@ -49,12 +47,8 @@ public class BedwarsPlayerManager {
      *
      */
     public void remove(Player p) {
-        for (BedwarsPlayer player : players) {
-            if (player.getPlayer().equals(p)) {
-                players.remove(player);
-                return;
-            }
-        }
+        if (p == null) return;
+        players.remove(p.getReference());
     }
 
     /**
@@ -62,15 +56,13 @@ public class BedwarsPlayerManager {
      * @param playerRef
      */
     public void remove(Ref<EntityStore> playerRef) {
-        for (BedwarsPlayer player : players) {
-            if (player.getRef().equals(playerRef)) {
-                players.remove(player);
-            }
-        }
+        if (playerRef == null) return;
+        players.remove(playerRef);
     }
 
     public void remove(BedwarsPlayer player) {
-        players.remove(player);
+        if (player == null) return;
+        players.remove(player.getRef());
     }
 
     /**
@@ -80,57 +72,41 @@ public class BedwarsPlayerManager {
      * @return the BedwarsPlayer object, or null if not found
      */
     public BedwarsPlayer get(Ref<EntityStore> ref) {
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getRef().equals(ref)) {
-                return players.get(i);
-            }
-        }
-        return null;
+        return players.get(ref);
     }
 
     public BedwarsPlayer get(Player player) {
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getPlayer().equals(player)) {
-                return players.get(i);
-            }
-        }
-        return null;
+        if (player == null) return null;
+        return players.get(player.getReference());
     }
 
     public BedwarsPlayer get(BedwarsPlayer player) {
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).equals(player)) {
-                return players.get(i);
-            }
-        }
-        return null;
+        if (player == null) return null;
+        return players.get(player.getRef());
     }
-
-    public BedwarsPlayer get(int index) {
-        return players.get(index);
-    }
-
 
     /**
      * Check if a player is registered.
      */
     public boolean contains(BedwarsPlayer player) {
-        return players.contains(player);
+        if (player == null) return false;
+        return players.containsKey(player.getRef());
     }
 
     public boolean contains(Player player) {
-        return players.contains(player);
+        if (player == null) return false;
+        return players.containsKey(player.getReference());
     }
 
-    public boolean contains(Ref<EntityStore> player) {
-        return players.contains(player);
+    public boolean contains(Ref<EntityStore> playerRef) {
+        return players.containsKey(playerRef);
     }
 
     /**
      * Get all registered BedWars players.
      */
-    public ArrayList<BedwarsPlayer> getAll() {
-        return players;
+    public Collection<BedwarsPlayer> getAll() {
+        return players.values();
     }
 
     /**

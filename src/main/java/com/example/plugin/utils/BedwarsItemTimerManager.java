@@ -9,6 +9,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
@@ -22,9 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /// @author ooney
 
@@ -41,17 +40,19 @@ public class BedwarsItemTimerManager {
         thisMap = map;
     }
 
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduler;
 
     // List of items to spawn with their respective rates.
-    private ArrayList<BedwarsItemTimer> times = new ArrayList<>();
+    // CopyOnWriteArrayList for thread safety without locking, since it checks the list every second its ticking.
+    private final List<BedwarsItemTimer> times = new CopyOnWriteArrayList<>();
 
     /** Start the item spawning, activated upon blocks being damaged and only after the game has started.
             ticks every second, repeats forever until stopped.
      */
     public void start(Store<EntityStore> store, Player player) {
         started = true;
-            scheduler.scheduleAtFixedRate(() -> {
+
+            scheduler = HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(() -> {
                 for (BedwarsItemTimer timer : times) {
 
 
@@ -71,8 +72,12 @@ public class BedwarsItemTimerManager {
     /**
      * Stops the timers.
      */
-    public void stop() {
-        scheduler.shutdown();
+    public @Nullable CompletableFuture<Void> stop() {
+        if (scheduler != null) {
+            scheduler.cancel(false);
+            scheduler = null;
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     // Accessor method for started flag.
