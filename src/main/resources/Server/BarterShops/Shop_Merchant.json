@@ -1,0 +1,11 @@
+{
+  "DisplayNameKey": "bedwars.shop.title",
+  "TradeSlots": [
+    {
+      "InputItemId": "Ore_Copper",
+      "InputQuantity": 1,
+      "OutputItemId": "Cloth_Block_Wool_Black",
+      "OutputQuantity": 4
+    }
+  ]
+}

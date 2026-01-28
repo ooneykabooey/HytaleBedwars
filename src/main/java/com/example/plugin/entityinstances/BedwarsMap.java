@@ -141,6 +141,10 @@ public class BedwarsMap {
         return null;
     }
 
+    public ArrayList<BedwarsMidResource> getMidResources() {
+        return midResources;
+    }
+
     ///  GET/SET WORLD
 
     public World getWorld() {

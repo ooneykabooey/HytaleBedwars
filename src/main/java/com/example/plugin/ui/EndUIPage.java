@@ -10,6 +10,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -67,6 +68,8 @@ public class EndUIPage extends InteractiveCustomUIPage<EndUIPage.EndEventData> {
 
             case "Done" -> {
                 Bedwars.registerMap(thisMap);
+                Bedwars.getInstance().getMapManager().saveMap("map1", thisMap);
+                player.sendMessage(Message.raw("Map configuration saved!"));
                 player.getPageManager().setPage(ref, store, Page.None);
             }
         }

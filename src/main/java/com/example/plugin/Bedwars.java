@@ -9,6 +9,7 @@ import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
 import com.example.plugin.events.InstantRespawnSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
+import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.messenger.BedwarsMessenger;
 import com.example.plugin.utils.BedwarsItemTimerManager;
 import com.example.plugin.utils.GAMEMODE;
@@ -48,6 +49,8 @@ public class Bedwars extends JavaPlugin {
     private boolean started = false;
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static final ArrayList<BedwarsMap> maps = new ArrayList<>();
+    private BedwarsMapManager mapManager;
+    private static Bedwars instance;
 
 
     // Metadata
@@ -60,6 +63,7 @@ public class Bedwars extends JavaPlugin {
     // Constructor
     public Bedwars(@Nonnull JavaPluginInit init) {
         super(init);
+        instance = this;
         LOGGER.atInfo().log("Hello from %s version %s", this.getName(), this.getManifest().getVersion().toString());
     }
 
@@ -69,21 +73,41 @@ public class Bedwars extends JavaPlugin {
         super.setup();
         ComponentRegistryProxy<EntityStore> estorereg = this.getEntityStoreRegistry();
 
+        // 1. Register Commands FIRST
+        this.getCommandRegistry().registerCommand(new WelcomeUICommand());
+        this.getCommandRegistry().registerCommand(new DebugCommand(this));
+        this.getCommandRegistry().registerCommand(new Tutorial3Command());
+        this.getCommandRegistry().registerCommand(new ActivateMapCommand());
+        this.getCommandRegistry().registerCommand(new BuyTestCommand());
+
+        // Load the config
+        this.mapManager = new BedwarsMapManager(this);
+
+        // Load all maps found in the bedwars_maps folder
+        try {
+            mapManager.loadAllMaps();
+        } catch (Exception e) {
+            LOGGER.atInfo().log("Failed to load maps during setup", e);
+        }
+        
         // Register EntityStore Systems
         estorereg.registerSystem(new BlockBreakSystem(this));
         estorereg.registerSystem(new BlockPlaceSystem());
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
         estorereg.registerSystem(new InstantRespawnSystem());
-
-        this.getCommandRegistry().registerCommand(new WelcomeUICommand());
-        this.getCommandRegistry().registerCommand(new DebugCommand(this));
-        this.getCommandRegistry().registerCommand(new Tutorial3Command());
-        this.getCommandRegistry().registerCommand(new ActivateMapCommand());
     }
 
     // Helper method to register all commands inside the plugin, for readability's sake.
     private void registerCommands() {
 
+    }
+
+    public static Bedwars getInstance() {
+        return instance;
+    }
+
+    public BedwarsMapManager getMapManager() {
+        return mapManager;
     }
 
     public boolean debugMode() {

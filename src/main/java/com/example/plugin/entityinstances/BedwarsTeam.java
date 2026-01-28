@@ -43,6 +43,9 @@ public class BedwarsTeam {
         this.bedLocation = bedLocation;
         this.thisMap = map;
         this.color = color;
+
+        // Initialize forges immediately so they work when loaded from config
+        initializeTeamForges(forgeLocation, null, map);
     }
 
     public String getId() {

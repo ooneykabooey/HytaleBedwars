@@ -1,5 +1,6 @@
 package com.example.plugin.ui;
 
+import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.messenger.BedwarsMessenger;
