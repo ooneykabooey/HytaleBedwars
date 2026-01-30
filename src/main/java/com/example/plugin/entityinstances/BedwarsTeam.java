@@ -2,7 +2,7 @@ package com.example.plugin.entityinstances;
 
 import com.example.plugin.Bedwars;
 import com.example.plugin.messenger.BedwarsMessenger;
-import com.example.plugin.utils.BedwarsItemTimer;
+import com.example.plugin.entityinstances.BedwarsItemTimer;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Vector3d;

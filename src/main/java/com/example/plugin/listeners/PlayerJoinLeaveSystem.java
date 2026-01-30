@@ -6,6 +6,7 @@ import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
+import com.example.plugin.utils.BedwarsLogger;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
@@ -23,6 +24,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 
 /// @author ooney
@@ -59,12 +61,15 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
     @Override
     public void onEntityAdded(@Nonnull Ref<EntityStore> ref, @Nonnull AddReason addReason, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         Player player = (Player) store.getComponent(ref, Player.getComponentType());
+        PlayerRef playerRef = (PlayerRef) store.getComponent(ref, PlayerRef.getComponentType());
+
+        // Null/Invalidity Checks
         assert player.getInventory() != null;
 
         player.getInventory().clear(); // Clear the player's inventory when they join.
 
         assert player.getWorld() != null;
-        thisMap = Bedwars.getMapFromMaps(player.getWorld());
+        thisMap = Bedwars.getMapFromMaps(player.getWorld()); // I don't know if this is thread/multiworld safe/compatible.
 
 
 
@@ -81,7 +86,7 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
                     Transform whereTo = new Transform(queueSpawn, new Vector3f(0, 0, 0));
 
 
-                    queueController.addPlayer(player);
+                    queueController.addPlayer(player, playerRef);
 
                     assert ref != null : "playerRef null when trying to read their join info.";
                     assert thisMap != null : "This world is not in the list of maps!!";
@@ -136,16 +141,24 @@ public class PlayerJoinLeaveSystem extends RefSystem<EntityStore> {
         assert player != null;
         assert player.getWorld() != null;
         thisMap = Bedwars.getMapFromMaps(player.getWorld());
-        assert thisMap != null : "Failed to remove player from player manager, the BedwarsMap registered as null when the player left.";
-        assert thisMap.getPlayerManager() != null;
 
-        if (thisMap.isActivated() && !thisMap.gameCommenced() && thisMap.getPlayerManager().contains(player)) {
-            queueController.removePlayer(player);
+        if (thisMap != null) {
+
+            assert thisMap.getPlayerManager() != null;
+
+            if (thisMap.isActivated() && !thisMap.gameCommenced() && thisMap.getPlayerManager().contains(player)) {
+                BedwarsLogger.LOGGER.at(Level.INFO).log(player.getDisplayName().toUpperCase() + " LEFT THE GAME! NULLIFYING AND REMOVING...");
+                queueController.removePlayer(player);
+            }
+
+            if (thisMap.gameCommenced() && thisMap.getPlayerManager().getSize() <= 1 && thisMap.getWorld().getPlayerCount() <= 1) {
+                thisMap.endGame();
+            }
+
         }
 
-        if (thisMap.gameCommenced() && thisMap.getPlayerManager().getSize() <= 0 && thisMap.getWorld().getPlayerCount() <= 0) {
-            thisMap.endGame();
-        }
+
+
 
         // Execute during game queue
         // Player will leave the lobby and won't be able to rejoin the same world once its game has started.

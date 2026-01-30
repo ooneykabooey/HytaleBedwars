@@ -149,6 +149,18 @@ public class BedwarsMapIO {
             this.location = new JsonVector(resource.getResourceLocation());
             this.duration = resource.getDuration();
         }
+
+        public String getID() {
+            return id;
+        }
+
+        public JsonVector getLocation() {
+            return location;
+        }
+
+        public int getDuration() {
+            return duration;
+        }
     }
 
     private static class JsonTeam {

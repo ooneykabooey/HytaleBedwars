@@ -8,6 +8,6 @@ package com.example.plugin.utils;
 public enum CurrencyType {
         COPPER,
         IRON,
-        SAPPHIRE,
+        DIAMOND,
         EMERALD
 }

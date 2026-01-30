@@ -5,6 +5,8 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import java.util.UUID;
+
 /// @author yasha, ooney
 
 public class BedwarsPlayer {
@@ -12,15 +14,17 @@ public class BedwarsPlayer {
     private final Ref<EntityStore> ref;
     private final PlayerRef playerRef;
     private final Player player;
+    private final UUID uuid;
 
     private BedwarsTeam team;
     private boolean eliminated = false;
     private boolean rejoinEligible = false;
 
-    public BedwarsPlayer(Player player) {
+    public BedwarsPlayer(Player player, UUID uuid) {
         this.player = player;
         this.ref = player.getReference();
         this.playerRef = (PlayerRef) ref.getStore().getComponent(ref, PlayerRef.getComponentType());
+        this.uuid = uuid;
     }
 
     public Ref<EntityStore> getRef() {
@@ -34,6 +38,10 @@ public class BedwarsPlayer {
     public Player getPlayerFromRef(Ref<EntityStore> ref) {
         assert ref != null : "ref null when trying to run getPlayerFromRef";
         return ref.getStore().getComponent(ref, Player.getComponentType());
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     /**

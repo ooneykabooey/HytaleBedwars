@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -36,9 +37,9 @@ public class BedwarsPlayerManager {
      *
      * @param player the Player object
      */
-    public void add(Player player) {
+    public void add(Player player, UUID uuid) {
         if (player == null) return;
-        BedwarsPlayer bedwarsPlayer = new BedwarsPlayer(player);
+        BedwarsPlayer bedwarsPlayer = new BedwarsPlayer(player, uuid);
         players.put(bedwarsPlayer.getRef(), bedwarsPlayer);
     }
 

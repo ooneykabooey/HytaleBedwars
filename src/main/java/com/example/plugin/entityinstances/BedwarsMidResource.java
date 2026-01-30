@@ -1,7 +1,7 @@
 package com.example.plugin.entityinstances;
 
 
-import com.example.plugin.utils.BedwarsItemTimer;
+import com.example.plugin.entityinstances.BedwarsItemTimer;
 import com.hypixel.hytale.math.vector.Vector3d;
 
 ///  @author ooney
