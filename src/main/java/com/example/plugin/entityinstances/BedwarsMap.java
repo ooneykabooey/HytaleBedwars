@@ -4,8 +4,8 @@ import com.example.plugin.Bedwars;
 import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.managers.BedwarsTeamsManager;
-import com.example.plugin.utils.BedwarsItemTimer;
-import com.example.plugin.utils.BedwarsItemTimerManager;
+import com.example.plugin.managers.BedwarsItemTimerManager;
+import com.example.plugin.utils.BedwarsLogger;
 import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.utils.TeamColor;
 import com.hypixel.hytale.component.ComponentType;
@@ -16,9 +16,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
-import com.hypixel.hytale.server.core.modules.entity.item.ItemPhysicsComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -70,7 +68,6 @@ public class BedwarsMap {
         gamemode = null;
     }
 
-
     public BedwarsMap(World world) {
         this();
         if (world != null) {
@@ -80,7 +77,6 @@ public class BedwarsMap {
             throw new NullPointerException("World null when attempting to register a BedwarsMap.");
         }
     }
- 
 
     /** Setter for the queueSpawn Vector3d, reads in doubles directly instead of a Vector3d.
      *
@@ -169,7 +165,7 @@ public class BedwarsMap {
         return null;
     }
 
-    public ArrayList<BedwarsMidResource> getMidResources() {
+    public Collection<BedwarsMidResource> getMidResources() {
         return midResources;
     }
 
@@ -319,6 +315,8 @@ public class BedwarsMap {
                 } else {
                     player.kick("Good Game! Amazing win!!");
                 }
+
+                playerManager.remove(player);
             }
         }
 
@@ -358,6 +356,7 @@ public class BedwarsMap {
         // Reset all in-game timers (sudden death/resource ramp ups)
         // Reset all team upgrades
 
+        BedwarsLogger.logEndGame(world);
         commenced = false;
     }
 

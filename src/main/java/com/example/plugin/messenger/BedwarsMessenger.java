@@ -75,6 +75,18 @@ public class BedwarsMessenger {
         player.sendMessage(Message.raw("Three or more people required to play."));
     }
 
+    public static void queueCancelled(BedwarsMap map) {
+        for (BedwarsPlayer player : map.getPlayerManager().getAll()) {
+            player.getPlayer().sendMessage(Message.raw("Not enough players to continue! Countdown cancelled!"));
+        }
+    }
+
+    public static void queueStarted(BedwarsMap map) {
+        for (BedwarsPlayer player : map.getPlayerManager().getAll()) {
+            player.getPlayer().sendMessage(Message.raw("We have enough players! Countdown started!"));
+        }
+    }
+
     public static void promptUserToDeploy(Player player) {
         player.sendMessage(Message.raw("Welcome, this world has not been registered as a bedwars map, do /deploy to do so!"));
     }

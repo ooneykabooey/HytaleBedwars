@@ -1,15 +1,16 @@
 package com.example.plugin;
-
-import com.example.plugin.TEST.Tutorial3Command;
 import com.example.plugin.commands.*;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.events.BlockBreakSystem;
 import com.example.plugin.events.BlockPlaceSystem;
+import com.example.plugin.events.EnderPearlSystem;
 import com.example.plugin.events.InstantRespawnSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.messenger.BedwarsMessenger;
+import com.example.plugin.managers.BedwarsItemTimerManager;
+import com.example.plugin.utils.GAMEMODE;
 import com.example.plugin.file.BedwarsShopIO;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.Holder;
@@ -74,7 +75,6 @@ public class Bedwars extends JavaPlugin {
         // 1. Register Commands FIRST
         this.getCommandRegistry().registerCommand(new WelcomeUICommand());
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
-        this.getCommandRegistry().registerCommand(new Tutorial3Command());
         this.getCommandRegistry().registerCommand(new ActivateMapCommand());
         this.getCommandRegistry().registerCommand(new HyUIShopCommand());
         this.getCommandRegistry().registerCommand(new CreateShopCommand());
@@ -96,6 +96,7 @@ public class Bedwars extends JavaPlugin {
         estorereg.registerSystem(new BlockPlaceSystem());
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
         estorereg.registerSystem(new InstantRespawnSystem());
+        estorereg.registerSystem(new EnderPearlSystem());
     }
 
     public void onWorldLoaded(AllWorldsLoadedEvent event) {

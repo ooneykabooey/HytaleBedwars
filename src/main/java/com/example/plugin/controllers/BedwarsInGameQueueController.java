@@ -5,12 +5,15 @@ import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.managers.BedwarsPlayerManager;
 import com.example.plugin.messenger.BedwarsMessenger;
+import com.example.plugin.utils.BedwarsLogger;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +42,7 @@ public class BedwarsInGameQueueController {
      *
      * @param player
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player, PlayerRef playerRef) {
          // If game has started, render them dead or eliminated.
 
         // Set this BedwarsMap
@@ -50,8 +53,10 @@ public class BedwarsInGameQueueController {
         assert thisMap != null : "thisMap null within BedwarsInGameQueueController line 48 :(";
         playerManager = thisMap.getPlayerManager();
 
+
+
         BedwarsMessenger.notEnoughPlayersMessage(player);
-        playerManager.add(player);
+        playerManager.add(player, playerRef.getUuid());
         thisMap.getWorld().execute(this::updateQueue);
 
         // player.getWorld().drainPlayersTo(); // Send them back to server lobby.
@@ -126,6 +131,8 @@ public class BedwarsInGameQueueController {
             started = true;
             secondsRemaining = startTime; // Reset to start time, assuming secondsRemaining will stay decremented after any potential reset.
 
+            BedwarsLogger.logStartQueueCountdown(thisMap.getWorld());
+            BedwarsMessenger.queueStarted(thisMap);
             BedwarsMessenger.queueTimeRemaining(secondsRemaining, thisMap.getWorld());
 
 
@@ -154,8 +161,9 @@ public class BedwarsInGameQueueController {
             scheduledTask = null;
         }
         started = false;
+        BedwarsMessenger.queueCancelled(thisMap);
+        BedwarsLogger.logCancelQueueCountdown(thisMap.getWorld());
         return CompletableFuture.completedFuture(null);
-        // Send message to all players
     }
 
     /** Start Game
@@ -165,6 +173,7 @@ public class BedwarsInGameQueueController {
      */
     private void startGame() {
         thisMap.setCommenced(true);
+        BedwarsLogger.logStartGame(thisMap.getWorld());
         thisMap.getTeamsManager().initializeTeams(thisMap);
         thisMap.getResourceTimer().start(thisMap.getResourceTimer().getStore(), thisMap.getResourceTimer().getSamplePlayer());
     }
