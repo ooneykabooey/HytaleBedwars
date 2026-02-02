@@ -4,7 +4,7 @@ import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.messenger.BedwarsMessenger;
-import com.example.plugin.utils.BedwarsItemTimer;
+import com.example.plugin.entityinstances.BedwarsItemTimer;
 import com.example.plugin.utils.GAMEMODE;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
