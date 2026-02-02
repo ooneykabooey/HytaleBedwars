@@ -5,6 +5,8 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 
+/// author yasha
+
 public class BedwarsShopItem {
 
     private final ItemStack cost;

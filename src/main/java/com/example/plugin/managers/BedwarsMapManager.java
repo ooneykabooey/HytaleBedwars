@@ -4,6 +4,8 @@ import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.file.BedwarsMapIO;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,6 +31,22 @@ public class BedwarsMapManager {
         LOGGER.atInfo().log("Saved Bedwars map '{}' to {}", name, path);
     }
 
+    public void tryBindMapsToWorlds() {
+        for (BedwarsMap map : maps.values()) {
+            if (map.getWorld() != null) continue;
+
+            World world = Universe.get().getWorld(map.getWorldName());
+            if (world != null) {
+                map.setWorld(world);
+                Bedwars.registerMap(map);
+
+                LOGGER.atInfo().log("Bound bedwars map " + map.getWorldName() + " to world " + world.getName());
+
+                LOGGER.atInfo().log("Map: " + map.getWorldName() + " world: " + map.getWorld());
+            }
+        }
+    }
+
     public void loadAllMaps() {
         if (!Files.exists(mapsDir)) return;
 
@@ -40,12 +58,14 @@ public class BedwarsMapManager {
                             map.setPlugin(plugin);
                             String name = path.getFileName().toString().replace(".json", "");
                             maps.put(name, map);
-                            LOGGER.atInfo().log("Loaded Bedwars map '{}' in world '{}'", name, map.getWorld().getName());
                         }
                     });
         } catch (Exception e) {
-            LOGGER.atInfo().log("Failed to load maps", e);
+            LOGGER.atInfo().log("Failed to load maps {}", e);
         }
+
+        tryBindMapsToWorlds();
+
     }
     
     public BedwarsMap getMap(String name) {

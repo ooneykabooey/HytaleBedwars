@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemPhysicsComponent;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -31,6 +32,7 @@ public class BedwarsMap {
     private boolean activated = false;
     private Bedwars plugin;
     private boolean commenced;
+    private String worldName;
     private World world;
     private Vector3d queueSpawn;
     private ArrayList<BedwarsMidResource> midResources; // Resources at mid (Diamond, Emerald)
@@ -68,14 +70,17 @@ public class BedwarsMap {
         gamemode = null;
     }
 
+
     public BedwarsMap(World world) {
         this();
         if (world != null) {
             this.world = world;
+            this.worldName = world.getName();
         } else {
             throw new NullPointerException("World null when attempting to register a BedwarsMap.");
         }
     }
+ 
 
     /** Setter for the queueSpawn Vector3d, reads in doubles directly instead of a Vector3d.
      *
@@ -86,6 +91,29 @@ public class BedwarsMap {
     public void registerMapsQueueSpawn(double x, double y, double z) {
         queueSpawn.setX(x); queueSpawn.setY(y); queueSpawn.setZ(z);
     }
+
+
+    ///  PERSISTENCE WORLD BINDING
+
+    public String getWorldName() { return worldName; }
+
+    public void setWorldName(String name) { this.worldName = name; }
+
+    public World getWorld() {
+        if (world == null && worldName != null) {
+            world = Universe.get().getWorld(worldName);
+        }
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+        if (world != null) {
+            this.worldName = world.getName();
+        }
+    }
+
+    public boolean isWorldBound() { return world != null; }
 
 
     ///  REGISTER SETTERS
@@ -143,16 +171,6 @@ public class BedwarsMap {
 
     public ArrayList<BedwarsMidResource> getMidResources() {
         return midResources;
-    }
-
-    ///  GET/SET WORLD
-
-    public World getWorld() {
-        return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
     }
 
     /// GET/SET GAMEMODE

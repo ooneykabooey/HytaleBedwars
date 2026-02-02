@@ -2,7 +2,6 @@ package com.example.plugin;
 
 import com.example.plugin.TEST.Tutorial3Command;
 import com.example.plugin.commands.*;
-import com.example.plugin.controllers.BedwarsInGameQueueController;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsPlayer;
 import com.example.plugin.events.BlockBreakSystem;
@@ -11,12 +10,10 @@ import com.example.plugin.events.InstantRespawnSystem;
 import com.example.plugin.listeners.PlayerJoinLeaveSystem;
 import com.example.plugin.managers.BedwarsMapManager;
 import com.example.plugin.messenger.BedwarsMessenger;
-import com.example.plugin.utils.BedwarsItemTimerManager;
-import com.example.plugin.utils.GAMEMODE;
+import com.example.plugin.file.BedwarsShopIO;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -26,11 +23,11 @@ import com.hypixel.hytale.protocol.ModelTransform;
 import com.hypixel.hytale.protocol.Position;
 import com.hypixel.hytale.protocol.packets.player.ClientTeleport;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -50,6 +47,7 @@ public class Bedwars extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static final ArrayList<BedwarsMap> maps = new ArrayList<>();
     private BedwarsMapManager mapManager;
+    private BedwarsShopIO shopManager;
     private static Bedwars instance;
 
 
@@ -78,10 +76,13 @@ public class Bedwars extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new DebugCommand(this));
         this.getCommandRegistry().registerCommand(new Tutorial3Command());
         this.getCommandRegistry().registerCommand(new ActivateMapCommand());
-        this.getCommandRegistry().registerCommand(new BuyTestCommand());
+        this.getCommandRegistry().registerCommand(new HyUIShopCommand());
+        this.getCommandRegistry().registerCommand(new CreateShopCommand());
 
         // Load the config
         this.mapManager = new BedwarsMapManager(this);
+        this.shopManager = new BedwarsShopIO();
+        this.shopManager.load();
 
         // Load all maps found in the bedwars_maps folder
         try {
@@ -89,12 +90,16 @@ public class Bedwars extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.atInfo().log("Failed to load maps during setup", e);
         }
-        
+
         // Register EntityStore Systems
         estorereg.registerSystem(new BlockBreakSystem(this));
         estorereg.registerSystem(new BlockPlaceSystem());
         estorereg.registerSystem(new PlayerJoinLeaveSystem(this));
         estorereg.registerSystem(new InstantRespawnSystem());
+    }
+
+    public void onWorldLoaded(AllWorldsLoadedEvent event) {
+        mapManager.tryBindMapsToWorlds();
     }
 
     // Helper method to register all commands inside the plugin, for readability's sake.
@@ -108,6 +113,10 @@ public class Bedwars extends JavaPlugin {
 
     public BedwarsMapManager getMapManager() {
         return mapManager;
+    }
+
+    public BedwarsShopIO getShopManager() {
+        return shopManager;
     }
 
     public boolean debugMode() {
@@ -124,11 +133,17 @@ public class Bedwars extends JavaPlugin {
             if (world.equals(map.getWorld())) {
                 return map;
             }
+            // Fallback: Check by name if the world object isn't linked yet
+            if (map.getWorldName() != null && map.getWorldName().equals(world.getName())) {
+                return map;
+            }
         }
         return null;
     }
 
     public static void registerMap(BedwarsMap bedwarsMap) {
+        if (maps.contains(bedwarsMap)) return;
+        LOGGER.atInfo().log(">>> Registering map for world: '{}'", bedwarsMap.getWorldName());
         maps.add(bedwarsMap);
     }
 

@@ -1,11 +1,13 @@
 package com.example.plugin.file;
 
+import com.example.plugin.Bedwars;
 import com.example.plugin.entityinstances.BedwarsMap;
 import com.example.plugin.entityinstances.BedwarsMidResource;
 import com.example.plugin.entityinstances.BedwarsTeam;
 import com.example.plugin.utils.GAMEMODE;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -19,8 +21,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/// author yasha
+
 public class BedwarsMapIO {
 
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     // Making the Gson, also setting to pretty printing :))
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -55,29 +60,39 @@ public class BedwarsMapIO {
                 GSON.toJson(data, writer);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.atWarning().log("Failed to save map to {}", path, e);
         }
     }
 
     public static BedwarsMap load(Path path) {
-        if (!Files.exists(path)) return null;
+        if (!Files.exists(path)) {
+            LOGGER.atWarning().log("Map file not found: {}", path);
+            return null;
+        }
 
         try (Reader reader = Files.newBufferedReader(path)) {
             MapData data = GSON.fromJson(reader, MapData.class);
-            if (data == null) return null;
+            if (data == null) {
+                LOGGER.atWarning().log("Failed to parse map data from: {}", path);
+                return null;
+            }
+
+            // --- DEBUG LOGGING ---
+            LOGGER.atInfo().log(">>> DEBUG: Loading JSON from: " + path.getFileName());
+            LOGGER.atInfo().log(">>> JSON worldName: " + data.worldName);
+            LOGGER.atInfo().log(">>> JSON gamemode: " + data.gamemode);
+            LOGGER.atInfo().log(">>> JSON teams count: " + String.valueOf(data.teams != null ? data.teams.size() : 0));
 
             if (data.worldName == null) {
-                System.err.println("Map config " + path + " is missing a worldName.");
+                LOGGER.atWarning().log("Map config {} is missing a worldName.", path);
                 return null;
             }
+
+            BedwarsMap map = new BedwarsMap();
+            map.setWorldName(data.worldName);
 
             World world = Universe.get().getWorld(data.worldName);
-            if (world == null) {
-                System.err.println("World '" + data.worldName + "' is not loaded. Cannot load map: " + path);
-                return null;
-            }
-
-            BedwarsMap map = new BedwarsMap(world);
+            if (world != null) map.setWorld(world);
 
             if (data.gamemode != null) {
                 try {
@@ -112,10 +127,13 @@ public class BedwarsMapIO {
                 }
             }
 
+            // Force registration here to ensure it reaches the main plugin
+            Bedwars.registerMap(map);
+            LOGGER.atInfo().log("Successfully loaded map for world: {}", map.getWorldName());
             return map;
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.atWarning().log("Exception while loading map: " + path + e);
             return null;
         }
     }
